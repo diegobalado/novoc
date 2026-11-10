@@ -6,6 +6,10 @@ App web estática para un juego de adivinación: se muestra la **categoría** y 
 Sin backend, sin base de datos, sin build. La palabra viaja **codificada dentro
 del parámetro `?c=` de la URL**, así que un enlace es todo el puzzle.
 
+**▶ [Jugar online](https://diegobalado.github.io/novoc/)** ·
+[Crear un puzzle](https://diegobalado.github.io/novoc/crear.html) ·
+[código](https://github.com/diegobalado/novoc)
+
 ## Cómo usarlo
 
 ```bash
