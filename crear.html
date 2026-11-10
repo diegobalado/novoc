@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Crear un puzzle · Juego de las consonantes</title>
+  <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+  <main class="app app--ancho">
+    <header class="app__header">
+      <a class="marca" href="index.html">Consonantes</a>
+      <nav class="app__nav">
+        <a href="index.html">Jugar</a>
+      </nav>
+    </header>
+
+    <h1 class="pagina__titulo">Crear un puzzle</h1>
+    <p class="pagina__bajada">
+      Escribí una palabra y su categoría. La app arma un link con la palabra
+      escondida adentro: no hay servidor, no hay base de datos, no queda registro.
+    </p>
+
+    <p id="aviso-local" class="aviso oculto">
+      Estás abriendo la app desde tu disco: los enlaces apuntan a archivos
+      locales, así que no se pueden compartir. Serví la app
+      (<code>python3 -m http.server 8000</code>) o poné la URL pública en
+      «URL base» para que los links sirvan.
+    </p>
+
+    <form id="form-crear" class="formulario">
+      <div class="campo">
+        <label for="palabra">Palabra</label>
+        <input id="palabra" name="palabra" type="text" autocomplete="off"
+               autocapitalize="off" spellcheck="false" placeholder="Pinocho">
+      </div>
+
+      <div class="campo">
+        <label for="categoria">Categoría</label>
+        <input id="categoria" name="categoria" type="text" autocomplete="off"
+               placeholder="Literatura">
+      </div>
+
+      <div class="campo">
+        <label for="url-base">URL base</label>
+        <input id="url-base" name="url-base" type="text" autocomplete="off"
+               spellcheck="false">
+        <p class="campo__ayuda">
+          Es la dirección de <code>index.html</code>. Si la app está publicada,
+          poné la URL pública (por ejemplo <code>https://sitio.com/</code>) y los
+          links que se generen salen compartibles.
+        </p>
+      </div>
+
+      <div class="campo">
+        <span class="campo__label">Así va a verse la pista</span>
+        <div id="preview-consonantes" class="consonantes consonantes--preview"></div>
+        <p id="preview-vacio" class="campo__ayuda">Escribí una palabra para ver sus consonantes.</p>
+      </div>
+
+      <button id="btn-generar" type="submit" class="boton boton--primario">Generar enlace</button>
+      <p id="form-error" class="resultado resultado--error" role="alert" aria-live="polite"></p>
+    </form>
+
+    <section id="resultado-panel" class="panel panel--ok oculto">
+      <h2 class="panel__titulo">Listo, tu enlace</h2>
+      <div class="campo">
+        <label for="enlace">Enlace para compartir</label>
+        <input id="enlace" type="text" readonly spellcheck="false">
+      </div>
+      <div class="acciones">
+        <button id="btn-copiar" type="button" class="boton boton--primario">Copiar</button>
+        <a id="enlace-abrir" class="boton boton--fantasma" href="#">Abrir el puzzle</a>
+      </div>
+      <p id="copiado" class="resultado" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="assets/js/codec.js"></script>
+  <script src="assets/js/crear.js"></script>
+</body>
+</html>

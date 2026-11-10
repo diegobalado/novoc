@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Juego de las consonantes</title>
+  <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <a class="marca" href="index.html">Consonantes</a>
+      <nav class="app__nav">
+        <a href="crear.html">Crear un puzzle</a>
+      </nav>
+    </header>
+
+    <section id="estado-carga" class="panel">
+      <p class="panel__texto">Cargando el puzzle…</p>
+    </section>
+
+    <section id="estado-error" class="panel panel--error oculto">
+      <h1 class="panel__titulo">No se pudo abrir el puzzle</h1>
+      <p id="error-mensaje" class="panel__texto"></p>
+      <a class="boton boton--primario" href="crear.html">Crear uno nuevo</a>
+    </section>
+
+    <section id="estado-vacio" class="panel oculto">
+      <h1 class="panel__titulo">Juego de las consonantes</h1>
+      <p class="panel__texto">
+        Este enlace no trae un puzzle. Generá uno y compartí el link:
+        la palabra viaja dentro de la URL, no en ningún servidor.
+      </p>
+      <a class="boton boton--primario" href="crear.html">Crear un puzzle</a>
+    </section>
+
+    <section id="estado-juego" class="oculto">
+      <p class="etiqueta">Categoría</p>
+      <h1 id="categoria" class="categoria"></h1>
+
+      <div id="consonantes" class="consonantes" aria-label="Consonantes"></div>
+
+      <form id="form-intento" class="intento" autocomplete="off">
+        <label class="intento__label" for="intento">Tu intento</label>
+        <div class="intento__fila">
+          <input id="intento" name="intento" type="text" inputmode="text"
+                 autocapitalize="off" autocomplete="off" spellcheck="false"
+                 placeholder="escribí la palabra…">
+          <button type="submit" class="boton boton--primario">Comprobar</button>
+        </div>
+      </form>
+
+      <p id="resultado" class="resultado" role="status" aria-live="polite"></p>
+
+      <p id="respuesta" class="respuesta oculto"></p>
+
+      <div class="acciones">
+        <button id="btn-revelar" type="button" class="boton boton--fantasma">Revelar respuesta</button>
+        <button id="btn-compartir" type="button" class="boton boton--fantasma">Compartir</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/codec.js"></script>
+  <script src="assets/js/juego.js"></script>
+</body>
+</html>
