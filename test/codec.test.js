@@ -5,7 +5,9 @@ const assert = require('node:assert');
 
 const codec = require('../assets/js/codec.js');
 
-// Vectores de test del plan (formato v1, variante plana 0x00)
+// Vectores de test del plan (formato v1, variante plana 0x00).
+// Las categorías son de la lista fija de assets/js/categorias.js, con
+// acentos: la categoría viaja tal cual en el payload.
 const VECTORES = [
   {
     palabra: 'Pinocho',
@@ -14,13 +16,13 @@ const VECTORES = [
   },
   {
     palabra: 'Wu-Tang Clan',
-    categoria: 'Musica',
-    code: 'AHsidiI6MSwidyI6Ild1LVRhbmcgQ2xhbiIsImMiOiJNdXNpY2EifQ'
+    categoria: 'Música',
+    code: 'AHsidiI6MSwidyI6Ild1LVRhbmcgQ2xhbiIsImMiOiJNw7pzaWNhIn0'
   },
   {
     palabra: 'Messi',
-    categoria: 'Futbol',
-    code: 'AHsidiI6MSwidyI6Ik1lc3NpIiwiYyI6IkZ1dGJvbCJ9'
+    categoria: 'Deportes',
+    code: 'AHsidiI6MSwidyI6Ik1lc3NpIiwiYyI6IkRlcG9ydGVzIn0'
   },
   {
     palabra: 'El Señor de los Anillos',

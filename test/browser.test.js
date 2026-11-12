@@ -465,6 +465,49 @@ test('crear.html con palabra y categoría vacías da error claro', OMITIR, async
   assert.strictEqual(estado.panelVisible, false);
 });
 
+test('la categoría se elige de una lista fija', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('crear.html'));
+
+  const estado = await cliente.evaluar(`(() => {
+    const s = document.getElementById('categoria');
+    return {
+      tag: s.tagName,
+      opciones: [...s.options].map(o => o.value),
+      inicial: s.value
+    };
+  })()`);
+
+  assert.strictEqual(estado.tag, 'SELECT', 'la categoría tiene que ser un dropdown');
+  assert.strictEqual(estado.opciones[0], '', 'la primera opción es la vacía');
+  assert.strictEqual(estado.inicial, '', 'no hay ninguna categoría elegida por defecto');
+  assert.ok(estado.opciones.includes('Literatura'));
+  assert.ok(estado.opciones.includes('Música'));
+  assert.strictEqual(
+    new Set(estado.opciones).size,
+    estado.opciones.length,
+    'no puede haber categorías repetidas'
+  );
+
+  const enlace = await cliente.evaluar(`(async () => {
+    document.getElementById('palabra').value = 'Wu-Tang Clan';
+    document.getElementById('palabra').dispatchEvent(new Event('input'));
+    document.getElementById('categoria').value = 'Música';
+    document.getElementById('form-crear').dispatchEvent(new Event('submit', {cancelable:true}));
+    await new Promise(r => setTimeout(r, 300));
+    return document.getElementById('enlace').value;
+  })()`);
+
+  const codigo = enlace.split('c=')[1];
+  const categoria = await cliente.evaluar(
+    `NovocCodec.decodePuzzle(${JSON.stringify(codigo)}).then(p => p.c)`
+  );
+  assert.strictEqual(categoria, 'Música', 'el enlace tiene que llevar la categoría elegida');
+});
+
 test('Copiar y Compartir funcionan en file://', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
