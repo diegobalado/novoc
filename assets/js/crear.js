@@ -49,6 +49,15 @@
       carta.textContent = firma.charAt(i);
       el.preview.appendChild(carta);
     }
+
+    ajustarPreview();
+  }
+
+  // El preview se ve igual que la pista del juego: una sola línea que llena
+  // el ancho. El tope es más chico que en el juego, para que no se coma el
+  // formulario.
+  function ajustarPreview() {
+    window.NovocLetras.ajustar(el.preview, 96);
   }
 
   function copiar(texto) {
@@ -123,6 +132,17 @@
 
   el.form.addEventListener('submit', generar);
   el.palabra.addEventListener('input', renderPreview);
+
+  window.addEventListener('resize', ajustarPreview);
+
+  if (window.document.fonts) {
+    if (window.document.fonts.addEventListener) {
+      window.document.fonts.addEventListener('loadingdone', ajustarPreview);
+    }
+    if (window.document.fonts.ready) {
+      window.document.fonts.ready.then(ajustarPreview);
+    }
+  }
 
   el.btnCopiar.addEventListener('click', function () {
     var texto = el.enlace.value;
