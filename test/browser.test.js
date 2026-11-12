@@ -563,11 +563,10 @@ test('crear.html genera un enlace jugable', OMITIR, async () => {
 
   await cliente.navegar(urlArchivo('crear.html'));
   const inicial = await cliente.evaluar(`(() => ({
-    base: document.getElementById('url-base').value,
+    hayInput: !!document.getElementById('url-base'),
     avisoVisible: !document.getElementById('aviso-local').classList.contains('oculto')
   }))()`);
-  assert.ok(inicial.base && inicial.base !== 'null' && inicial.base !== 'undefined');
-  assert.match(inicial.base, /index\.html$/);
+  assert.strictEqual(inicial.hayInput, false, 'la URL base no se configura: no hay input');
   assert.strictEqual(inicial.avisoVisible, true, 'en file:// debe avisar que no se puede compartir');
 
   const generado = await cliente.evaluar(`(async () => {
@@ -585,6 +584,11 @@ test('crear.html genera un enlace jugable', OMITIR, async () => {
   assert.strictEqual(generado.preview, 'pnch', 'el preview en vivo muestra las consonantes');
   assert.ok(generado.panelVisible);
   assert.ok(generado.enlace.endsWith(CODIGO_PINOCHO), 'el código debe coincidir con el del plan');
+  assert.match(
+    generado.enlace,
+    /^file:\/\/.+\/index\.html\?c=/,
+    'el enlace tiene que ser absoluto y apuntar a index.html'
+  );
 
   await cliente.navegar(generado.enlace);
   const abierto = await cliente.evaluar(`(() => ({

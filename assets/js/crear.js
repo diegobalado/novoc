@@ -7,7 +7,6 @@
     form: document.getElementById('form-crear'),
     palabra: document.getElementById('palabra'),
     categoria: document.getElementById('categoria'),
-    urlBase: document.getElementById('url-base'),
     preview: document.getElementById('preview-consonantes'),
     previewVacio: document.getElementById('preview-vacio'),
     error: document.getElementById('form-error'),
@@ -23,11 +22,12 @@
   function ocultar(node) { node.classList.add('oculto'); }
 
   /**
-   * URL base por defecto: la de esta misma página, sin query, apuntando al
+   * La base de los enlaces: la dirección de index.html. No se configura, la
+   * app sabe dónde vive. Es la de esta misma página, sin query, apuntando al
    * index.html (el juego) que vive al lado. No se usa location.origin porque
    * en file:// es "null" o "file://".
    */
-  function urlBasePorDefecto() {
+  function urlBase() {
     var href = window.location.href.split('?')[0].split('#')[0];
     if (/\.html?$/i.test(href)) return href.replace(/[^/]*$/, 'index.html');
     return href.replace(/\/+$/, '') + '/index.html';
@@ -102,13 +102,6 @@
     }
   }
 
-  function normalizarBase(base) {
-    var limpio = String(base || '').trim();
-    if (limpio === '') return '';
-    if (/\.html?$/i.test(limpio)) return limpio;
-    return limpio.replace(/\/+$/, '') + '/index.html';
-  }
-
   function mostrarError(mensaje) {
     el.error.textContent = mensaje;
     el.error.className = 'resultado resultado--error';
@@ -120,13 +113,7 @@
 
     var palabra = el.palabra.value.trim();
     var categoria = el.categoria.value.trim();
-    var base = normalizarBase(el.urlBase.value);
-
-    if (base === '') {
-      mostrarError('Falta la URL base: poné la dirección donde vive index.html.');
-      el.urlBase.focus();
-      return;
-    }
+    var base = urlBase();
 
     // La categoría sale de un <select> con la lista fija, pero por si alguien
     // la toca desde la consola, se valida contra la lista. La vacía la
@@ -178,8 +165,6 @@
       }
     });
   });
-
-  el.urlBase.value = urlBasePorDefecto();
 
   if (window.location.protocol === 'file:') mostrar(el.avisoLocal);
 
