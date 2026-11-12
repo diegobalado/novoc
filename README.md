@@ -23,11 +23,38 @@ python3 -m http.server 8000
 ```
 
 - `index.html` es el juego: lee `?c=<código>`, muestra la categoría y las
-  consonantes, y valida el intento.
+  consonantes, y valida el intento. Sin `?c=` es la pantalla de inicio, que
+  ofrece tres ejemplos jugables.
 - `crear.html` es el generador: se escribe palabra + categoría y devuelve un
   enlace listo para compartir. La categoría se elige de una lista fija.
 
 ## Cómo funciona
+
+### La pantalla de inicio
+
+Sin `?c=` en la URL, el juego muestra la pantalla de inicio: el título, tres
+**ejemplos jugables** y el botón para crear un puzzle.
+
+Cada ejemplo es una tarjeta con la **categoría** y la **pista** (las
+consonantes), igual que la pantalla de juego: se ve cómo se juega y el
+ejemplo no se arruina. La tarjeta es un link a `index.html?c=<código>`.
+
+Los datos viven en `assets/js/ejemplos.js`:
+
+| Palabra | Categoría | Pista |
+|---|---|---|
+| Leandro Paredes | Deportes | `lndrprds` |
+| Minions y monstruos | Cine y series | `mnnsymnstrs` |
+| El conde de montecristo | Literatura | `lcnddmntcrst` |
+
+El código de cada ejemplo se arma **en runtime** con `encodePuzzle`, así que
+cambiar una palabra en ese archivo no obliga a recalcular ningún código: la
+fuente de verdad es la palabra y la categoría. Los links aparecen un tick
+después del primer paint.
+
+La pista de las tres tarjetas usa **el mismo tamaño de letra**: se mide cada
+fila y se aplica el tamaño de la más larga, así ninguna tarjeta tiene letras
+grandes que las otras.
 
 ### La firma consonantal
 
@@ -126,12 +153,14 @@ novoc/
 │   └── js/
 │       ├── codec.js      ← base64url, deflate, firma, encode/decode
 │       ├── categorias.js ← lista fija de categorías
+│       ├── ejemplos.js   ← los tres ejemplos de la pantalla de inicio
 │       ├── letras.js     ← ajuste del tamaño de la pista
 │       ├── juego.js      ← render + validación del intento
 │       └── crear.js      ← form + link + copiar
 ├── test/
 │   ├── codec.test.js      ← node --test (CommonJS)
 │   ├── categorias.test.js ← node --test (CommonJS)
+│   ├── ejemplos.test.js   ← node --test (CommonJS)
 │   └── browser.test.js    ← node --test: el juego en Chromium headless (CDP)
 ├── package.json
 └── README.md
@@ -197,8 +226,10 @@ tipografía de respaldo, que tiene otras medidas.
 ## Tests
 
 ```bash
-npm test             # todo: codec + navegador
+npm test             # todo: codec + categorías + ejemplos + navegador
 npm run test:codec   # solo el codec (node --test test/codec.test.js)
+npm run test:categorias # solo las categorías
+npm run test:ejemplos   # solo los ejemplos
 npm run test:browser # solo el navegador (node --test test/browser.test.js)
 ```
 
@@ -211,13 +242,20 @@ y validaciones de palabra/categoría.
 esté vacía, no tenga repetidas ni categorías con espacios al borde, y que
 `esValida` acepte solo lo que está en la lista.
 
-**`test/browser.test.js`** (14 tests): levanta Chromium headless y maneja el
+**`test/ejemplos.test.js`** (7 tests, sin dependencias): que los ejemplos
+tengan los datos completos, que su categoría esté en la lista fija, que
+ninguna palabra se quede sin consonantes, el round-trip de cada ejemplo
+(codificar y decodificar) y que el código de cada uno sea el documentado.
+
+**`test/browser.test.js`** (16 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
-intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, generación de
-enlaces, botón Copiar, botón Compartir, la carga de la tipografía en `file://`,
-que la pista vaya en una sola línea llenando el ancho, que se recalcule al
-cambiar el tamaño de la ventana y que la categoría se elija de la lista fija.
+intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, los tres ejemplos de
+la pantalla de inicio (y que un ejemplo abra el puzzle correcto), generación
+de enlaces, botón Copiar, botón Compartir, la carga de la tipografía en
+`file://`, que la pista vaya en una sola línea llenando el ancho, que se
+recalcule al cambiar el tamaño de la ventana y que la categoría se elija de la
+lista fija.
 
 El navegador se busca solo (`/usr/bin/chromium`, `google-chrome`, la cache de
 Playwright…). Para indicar uno a mano:
