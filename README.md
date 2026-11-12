@@ -147,6 +147,21 @@ pueden tener una categoría que hoy no existe en la lista (por ejemplo
 `Musica`, sin acento, o `Futbol`), y tienen que seguir abriendo. La
 validación solo es del lado del generador.
 
+### La URL base
+
+Los enlaces que genera el generador son **absolutos** y salen de una sola
+regla, que vive en `assets/js/base.js`:
+
+- Si la app se está corriendo **en local** (doble click, `file://`, o
+  `localhost`), la base es la local: el `index.html` que vive al lado de
+  `crear.html`. Sirve para debuggear, pero esos links no se pueden compartir
+  (por eso el generador avisa).
+- En cualquier otro caso, la base es la **app publicada**
+  (`https://diegobalado.github.io/novoc/index.html`): los links salen
+  compartibles.
+
+No hay ningún campo para configurarlo: la app sabe dónde vive.
+
 ## Estructura
 
 ```
@@ -160,6 +175,7 @@ novoc/
 │       ├── codec.js      ← base64url, deflate, firma, encode/decode
 │       ├── categorias.js ← lista fija de categorías
 │       ├── ejemplos.js   ← los tres ejemplos de la pantalla de inicio
+│       ├── base.js       ← la URL base de los enlaces
 │       ├── letras.js     ← ajuste del tamaño de la pista
 │       ├── juego.js      ← render + validación del intento
 │       └── crear.js      ← form + link + copiar
@@ -167,6 +183,7 @@ novoc/
 │   ├── codec.test.js      ← node --test (CommonJS)
 │   ├── categorias.test.js ← node --test (CommonJS)
 │   ├── ejemplos.test.js   ← node --test (CommonJS)
+│   ├── base.test.js       ← node --test (CommonJS)
 │   └── browser.test.js    ← node --test: el juego en Chromium headless (CDP)
 ├── package.json
 └── README.md
@@ -243,7 +260,7 @@ borde.
 
 - **`navigator.clipboard` no es confiable en `file://`**: hay un fallback con
   `document.execCommand('copy')` sobre un `<textarea>` temporal.
-- **`location.origin` es `"null"` o `"file://"` en `file://`**: la URL base se
+- **`location.origin` es `"null"` o `"file://"` en `file://`**: la URL local se
   arma con `location.href`, nunca con `origin`.
 - **Con el `body` como columna flex, un `<span>` que se agrega para medir
   texto se estira**: hay que ponerlo `align-self: flex-start`, si no mide el
@@ -258,10 +275,11 @@ borde.
 ## Tests
 
 ```bash
-npm test             # todo: codec + categorías + ejemplos + navegador
+npm test             # todo: codec + categorías + ejemplos + base + navegador
 npm run test:codec   # solo el codec (node --test test/codec.test.js)
 npm run test:categorias # solo las categorías
 npm run test:ejemplos   # solo los ejemplos
+npm run test:base      # solo la URL base
 npm run test:browser # solo el navegador (node --test test/browser.test.js)
 ```
 
@@ -279,14 +297,19 @@ tengan los datos completos, que su categoría esté en la lista fija, que
 ninguna palabra se quede sin consonantes, el round-trip de cada ejemplo
 (codificar y decodificar) y que el código de cada uno sea el documentado.
 
-**`test/browser.test.js`** (20 tests): levanta Chromium headless y maneja el
+**`test/base.test.js`** (7 tests, sin dependencias): la regla de la URL base
+(la app publicada salvo que se esté en local), que la base siempre sea
+absoluta y que la URL local cambie el archivo por `index.html`.
+
+**`test/browser.test.js`** (21 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
 intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, la pantalla de
 inicio (que explique el juego sin jerga técnica y muestre el nombre del juego
 en mayúsculas, con color y centrado), los tres ejemplos de la pantalla de
 inicio (y que un ejemplo abra el puzzle correcto), generación
-de enlaces, botón Copiar, botón Compartir, la carga de la tipografía en
+de enlaces (que en local apunten a la copia local y en la app publicada a la
+URL pública), botón Copiar, botón Compartir, la carga de la tipografía en
 `file://`, que la pista vaya en una sola línea llenando el ancho, que se
 recalcule al cambiar el tamaño de la ventana, que la categoría se elija de la
 lista fija y el reparto vertical (en un celular de 390×844 y en una pantalla
@@ -305,9 +328,16 @@ forzar el salte en CI: `NOVOC_SIN_NAVEGADOR=1 npm test`.
 ## Publicar
 
 Cualquier hosting estático sirve (GitHub Pages, Netlify, Cloudflare Pages). No
-hay build: se sube la carpeta tal cual. Después de publicar, en `crear.html`
-hay que poner la URL pública en el campo **URL base** para que los enlaces
-generados sean compartibles.
+hay build: se sube la carpeta tal cual.
+
+La URL de la app publicada está en un solo lugar, `URL_PUBLICA` en
+`assets/js/base.js` (y en los `og:url` del HTML). Si la app se publica en
+otro dominio, hay que cambiar esa constante.
+
+Los enlaces que genera `crear.html` **siempre son absolutos**: si la app está
+corriendo en local (doble click o `localhost`), apuntan a la copia local (y
+sale un aviso de que no se pueden compartir); en cualquier otro caso, a la
+app publicada.
 
 ## Backlog (post-MVP)
 
