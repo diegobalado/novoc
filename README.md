@@ -103,9 +103,8 @@ Cualquier falla lanza un error con mensaje legible, y la página lo muestra.
 Las categorías son **fijas**: en el generador se eligen de un dropdown, no se
 escriben a mano. La lista vive en `assets/js/categorias.js`:
 
-> Literatura · Cine · Series · Música · Teatro · Deportes · Historia · Ciencia ·
-> Tecnología · Videojuegos · Animales · Lugares · Objetos · Marcas · Personas ·
-> Otros
+> Literatura · Cine · Series · Música · Deportes · Historia · Ciencia ·
+> Videojuegos · Animales · Lugares · Personas
 
 El `<select>` se puebla desde esa lista, así que el HTML y la lista no pueden
 quedar desincronizados. Para agregar una categoría, se agrega en ese archivo.

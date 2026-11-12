@@ -23,18 +23,13 @@
     'Cine',
     'Series',
     'Música',
-    'Teatro',
     'Deportes',
     'Historia',
     'Ciencia',
-    'Tecnología',
     'Videojuegos',
     'Animales',
     'Lugares',
-    'Objetos',
-    'Marcas',
-    'Personas',
-    'Otros'
+    'Personas'
   ];
 
   function esValida(categoria) {
