@@ -128,6 +128,15 @@
       return;
     }
 
+    // La categoría sale de un <select> con la lista fija, pero por si alguien
+    // la toca desde la consola, se valida contra la lista. La vacía la
+    // descarta el codec, con su propio mensaje.
+    if (categoria !== '' && !window.NovocCategorias.esValida(categoria)) {
+      mostrarError('Esa categoría no está en la lista.');
+      el.categoria.focus();
+      return;
+    }
+
     C.encodePuzzle(palabra, categoria).then(function (code) {
       var url = base + (base.indexOf('?') === -1 ? '?' : '&') + 'c=' + code;
       el.enlace.value = url;
