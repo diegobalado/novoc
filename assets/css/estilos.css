@@ -59,7 +59,11 @@ body {
   font-family: var(--fuente);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  padding: 0 16px 64px;
+  padding: 0 16px 24px;
+  /* El padding de abajo deja aire para la barra del navegador y el notch.
+     Como max() y env() no existen en todos los navegadores, el 24px de
+     arriba queda como respaldo. */
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
 }
 
 .oculto { display: none !important; }
