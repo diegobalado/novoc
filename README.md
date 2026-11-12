@@ -106,6 +106,7 @@ novoc/
 ├── crear.html          ← generador de enlaces
 ├── assets/
 │   ├── css/estilos.css
+│   ├── fonts/          ← Space Grotesk (woff2) + licencia OFL
 │   └── js/
 │       ├── codec.js    ← base64url, deflate, firma, encode/decode
 │       ├── juego.js    ← render + validación del intento
@@ -116,6 +117,15 @@ novoc/
 ├── package.json
 └── README.md
 ```
+
+## Tipografía
+
+La app usa **Space Grotesk**, auto-hospedada en `assets/fonts/` (woff2, 41 KB
+en total). Va con `@font-face` y no con un CDN: sigue funcionando sin internet
+y abriendo el archivo con doble click.
+
+Space Grotesk es de [Florian Karsten](https://github.com/floriankarsten/space-grotesk),
+bajo SIL Open Font License 1.1 (la licencia está en `assets/fonts/OFL.txt`).
 
 ## Scripts clásicos, no módulos
 
@@ -157,11 +167,11 @@ round-trip del codec, los códigos exactos del plan, acentos, ñ, payload
 corrupto, base64url inválido, marca desconocida, versión de payload desconocida
 y validaciones de palabra/categoría.
 
-**`test/browser.test.js`** (10 tests): levanta Chromium headless y maneja el
+**`test/browser.test.js`** (11 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
 intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, generación de
-enlaces, botón Copiar y botón Compartir.
+enlaces, botón Copiar, botón Compartir y la carga de la tipografía en `file://`.
 
 El navegador se busca solo (`/usr/bin/chromium`, `google-chrome`, la cache de
 Playwright…). Para indicar uno a mano:

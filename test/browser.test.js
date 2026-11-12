@@ -421,6 +421,40 @@ test('Copiar y Compartir funcionan en file://', OMITIR, async () => {
   assert.match(compartido, /copiado/i, 'sin navigator.share debe caer al copiado');
 });
 
+test('la tipografía Space Grotesk carga y se aplica en file://', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const estado = await cliente.evaluar(`(async () => {
+    await document.fonts.ready;
+    const medir = (familia) => {
+      const s = document.createElement('span');
+      s.style.fontFamily = familia;
+      s.style.fontSize = '40px';
+      s.style.display = 'inline-block';
+      s.textContent = 'Pinocho';
+      document.body.appendChild(s);
+      const w = s.getBoundingClientRect().width;
+      s.remove();
+      return w;
+    };
+    return {
+      cargada: document.fonts.check('700 16px "Space Grotesk"'),
+      conSpace: medir('"Space Grotesk"'),
+      conFallback: medir('monospace')
+    };
+  })()`);
+
+  assert.strictEqual(estado.cargada, true, 'la fuente tiene que estar cargada');
+  assert.ok(
+    Math.abs(estado.conSpace - estado.conFallback) > 0.5,
+    'la fuente cargada tiene que renderizar distinta al fallback'
+  );
+});
+
 test('no hay errores en la consola', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
