@@ -98,6 +98,14 @@ body.pantalla-juego #estado-juego {
   flex: 1 0 auto;
 }
 
+/* La pantalla de inicio también se reparte: título arriba, ejemplos en el
+   medio y el botón abajo del todo. */
+body.pantalla-juego #estado-vacio {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
 .app--ancho { max-width: 780px; }
 
 .app__header {
@@ -259,7 +267,10 @@ body.resuelto .consonante {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin: 0 0 24px;
+  /* Los márgenes auto dejan los ejemplos en el medio de la pantalla; el
+     padding es el hueco mínimo con el botón de abajo. */
+  margin: auto 0;
+  padding-bottom: 24px;
 }
 
 .ejemplo {
