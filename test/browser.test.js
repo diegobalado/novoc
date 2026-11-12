@@ -406,6 +406,86 @@ test('sin ?c= la pantalla deriva a crear.html', OMITIR, async () => {
   assert.strictEqual(estado.href, 'crear.html');
 });
 
+test('la pantalla de inicio ofrece tres ejemplos jugables', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html'));
+
+  // El código de cada ejemplo se arma en runtime, así que hay que esperar a
+  // que los href tengan el ?c=.
+  const estado = await cliente.evaluar(`(async () => {
+    const esperar = async () => {
+      for (let i = 0; i < 50; i++) {
+        const links = [...document.querySelectorAll('#ejemplos a.ejemplo')];
+        const listos = links.length && links.every(a => (a.getAttribute('href') || '').indexOf('?c=') !== -1);
+        if (listos) return links;
+        await new Promise(r => setTimeout(r, 50));
+      }
+      return [];
+    };
+    const links = await esperar();
+    return {
+      total: links.length,
+      datos: links.map(a => ({
+        categoria: a.querySelector('.ejemplo__categoria').textContent,
+        pista: [...a.querySelectorAll('.consonante')].map(n => n.textContent).join(''),
+        href: a.getAttribute('href'),
+        tamano: Math.round(parseFloat(getComputedStyle(a.querySelector('.ejemplo__pista')).fontSize))
+      }))
+    };
+  })()`);
+
+  assert.strictEqual(estado.total, 3, 'tiene que haber tres ejemplos');
+  assert.deepStrictEqual(
+    estado.datos.map(e => e.categoria),
+    ['Deportes', 'Cine y series', 'Literatura'],
+    'cada ejemplo muestra su categoría'
+  );
+  assert.deepStrictEqual(
+    estado.datos.map(e => e.pista),
+    ['lndrprds', 'mnnsymnstrs', 'lcnddmntcrst'],
+    'cada ejemplo muestra la pista, no la palabra'
+  );
+  for (const e of estado.datos) {
+    assert.match(e.href, /index\.html\?c=[A-Za-z0-9_-]+$/, 'el ejemplo tiene que enlazar a un puzzle');
+  }
+  assert.strictEqual(
+    new Set(estado.datos.map(e => e.tamano)).size,
+    1,
+    'las tres tarjetas tienen que usar el mismo tamaño de letra'
+  );
+});
+
+test('un ejemplo abre el puzzle con la pista esperada', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html'));
+  const href = await cliente.evaluar(`(async () => {
+    for (let i = 0; i < 50; i++) {
+      const a = document.querySelector('#ejemplos a.ejemplo');
+      const h = a && a.getAttribute('href');
+      if (h && h.indexOf('?c=') !== -1) return h;
+      await new Promise(r => setTimeout(r, 50));
+    }
+    return '';
+  })()`);
+  assert.match(href, /index\.html\?c=/);
+
+  const codigo = href.split('?c=')[1];
+  await cliente.navegar(urlArchivo('index.html', '?c=' + codigo));
+
+  const abierto = await cliente.evaluar(`(() => ({
+    categoria: document.getElementById('categoria').textContent,
+    consonantes: [...document.querySelectorAll('#consonantes .consonante')].map(n => n.textContent).join('')
+  }))()`);
+  assert.strictEqual(abierto.categoria, 'Deportes');
+  assert.strictEqual(abierto.consonantes, 'lndrprds');
+});
+
 test('crear.html genera un enlace jugable', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
