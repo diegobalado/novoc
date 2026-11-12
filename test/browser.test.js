@@ -399,7 +399,7 @@ test('sin ?c= la pantalla deriva a crear.html', OMITIR, async () => {
   const estado = await cliente.evaluar(`(() => ({
     vacioVisible: !document.getElementById('estado-vacio').classList.contains('oculto'),
     juegoVisible: !document.getElementById('estado-juego').classList.contains('oculto'),
-    href: document.querySelector('#estado-vacio a').getAttribute('href')
+    href: document.querySelector('#estado-vacio a.boton').getAttribute('href')
   }))()`);
   assert.strictEqual(estado.vacioVisible, true);
   assert.strictEqual(estado.juegoVisible, false);

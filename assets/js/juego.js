@@ -8,6 +8,7 @@
     error: document.getElementById('estado-error'),
     errorMensaje: document.getElementById('error-mensaje'),
     vacio: document.getElementById('estado-vacio'),
+    ejemplos: document.getElementById('ejemplos'),
     juego: document.getElementById('estado-juego'),
     categoria: document.getElementById('categoria'),
     consonantes: document.getElementById('consonantes'),
@@ -19,9 +20,14 @@
     btnCompartir: document.getElementById('btn-compartir')
   };
 
+  // Tope del tamaño de letra de las tarjetas de ejemplo: son más chicas que
+  // la pista del juego, para que el bloque no se coma la pantalla.
+  var TOPE_EJEMPLOS = 56;
+
   var puzzle = null;
   var firmaObjetivo = '';
   var resuelto = false;
+  var pistasEjemplos = [];
 
   function mostrar(node) { node.classList.remove('oculto'); }
   function ocultar(node) { node.classList.add('oculto'); }
@@ -48,7 +54,56 @@
   // ancho disponible. Hay que ajustar después de mostrar la pantalla: si el
   // panel está oculto, clientWidth da 0 y no hay nada que medir.
   function ajustarTamano() {
-    window.NovocLetras.ajustar(el.consonantes);
+    if (!el.juego.classList.contains('oculto')) {
+      window.NovocLetras.ajustar(el.consonantes);
+    }
+  }
+
+  // Los ejemplos de la pantalla de inicio: cada tarjeta es un link a un
+  // puzzle. El código se arma en runtime con encodePuzzle, así que el href
+  // se completa un tick después del primer paint.
+  function crearTarjetaEjemplo(ejemplo) {
+    var firma = C.firma(ejemplo.palabra);
+
+    var link = document.createElement('a');
+    link.className = 'ejemplo';
+    link.href = 'index.html';
+
+    var categoria = document.createElement('span');
+    categoria.className = 'ejemplo__categoria';
+    categoria.textContent = ejemplo.categoria;
+    link.appendChild(categoria);
+
+    var pista = document.createElement('span');
+    pista.className = 'ejemplo__pista consonantes';
+    for (var i = 0; i < firma.length; i++) {
+      var carta = document.createElement('span');
+      carta.className = 'consonante';
+      carta.textContent = firma.charAt(i);
+      pista.appendChild(carta);
+    }
+    link.appendChild(pista);
+
+    C.encodePuzzle(ejemplo.palabra, ejemplo.categoria).then(function (code) {
+      link.href = 'index.html?c=' + code;
+    }, function () {
+      link.removeAttribute('href');
+    });
+
+    return { link: link, pista: pista };
+  }
+
+  function renderEjemplos() {
+    if (!el.ejemplos) return;
+    el.ejemplos.textContent = '';
+    pistasEjemplos = [];
+
+    var lista = window.NovocEjemplos.lista;
+    for (var i = 0; i < lista.length; i++) {
+      var tarjeta = crearTarjetaEjemplo(lista[i]);
+      el.ejemplos.appendChild(tarjeta.link);
+      pistasEjemplos.push(tarjeta.pista);
+    }
   }
 
   function mostrarError(mensaje) {
@@ -149,6 +204,7 @@
     if (!codigo) {
       ocultar(el.carga);
       mostrar(el.vacio);
+      renderEjemplos();
       return;
     }
 
