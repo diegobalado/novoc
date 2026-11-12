@@ -167,7 +167,11 @@
     });
   });
 
-  if (window.location.protocol === 'file:') mostrar(el.avisoLocal);
+  // En local (file:// o localhost) los enlaces que se generen no se pueden
+  // compartir: el aviso lo dice.
+  if (window.NovocBase.esLocal(window.location.protocol, window.location.hostname)) {
+    mostrar(el.avisoLocal);
+  }
 
   poblarCategorias();
   renderPreview();

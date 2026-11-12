@@ -219,6 +219,11 @@ body.pantalla-juego #estado-vacio {
   border-radius: 5px;
 }
 
+.aviso a {
+  color: #f0d08a;
+  font-weight: 600;
+}
+
 /* ---------- juego ---------- */
 
 /* El bloque de la pista (categoría + consonantes) se queda cerca del medio
