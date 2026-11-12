@@ -209,18 +209,16 @@ body {
   padding: 0 10px;
   border-radius: var(--radio-chico);
   background: var(--superficie-alta);
-  border: 1px solid var(--borde-fuerte);
   font-family: var(--fuente-mono);
   font-size: 1.6rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--texto);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.35);
 }
 
 body.resuelto .consonante {
-  border-color: rgba(86, 211, 100, 0.55);
   background: rgba(86, 211, 100, 0.1);
+  color: var(--ok);
 }
 
 /* ---------- formularios ---------- */
