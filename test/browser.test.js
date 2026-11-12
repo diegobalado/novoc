@@ -473,7 +473,7 @@ test('Copiar y Compartir funcionan en file://', OMITIR, async () => {
   await cliente.navegar(urlArchivo('crear.html'));
   await cliente.evaluar(`(async () => {
     document.getElementById('palabra').value = 'Messi';
-    document.getElementById('categoria').value = 'Futbol';
+    document.getElementById('categoria').value = 'Deportes';
     document.getElementById('form-crear').dispatchEvent(new Event('submit', {cancelable:true}));
     await new Promise(r => setTimeout(r, 300));
   })()`);

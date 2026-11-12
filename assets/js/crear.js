@@ -33,6 +33,18 @@
     return href.replace(/\/+$/, '') + '/index.html';
   }
 
+  // El <select> de categorías se puebla desde la lista fija, para que el
+  // HTML y la lista no puedan quedar desincronizados.
+  function poblarCategorias() {
+    var lista = window.NovocCategorias.lista;
+    for (var i = 0; i < lista.length; i++) {
+      var opcion = document.createElement('option');
+      opcion.value = lista[i];
+      opcion.textContent = lista[i];
+      el.categoria.appendChild(opcion);
+    }
+  }
+
   function renderPreview() {
     var firma = C.firma(el.palabra.value);
     el.preview.textContent = '';
@@ -162,5 +174,6 @@
 
   if (window.location.protocol === 'file:') mostrar(el.avisoLocal);
 
+  poblarCategorias();
   renderPreview();
 })();

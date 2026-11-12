@@ -266,6 +266,32 @@ input[type="text"]::placeholder { color: #5f6d61; }
 
 input[readonly] { color: var(--acento); }
 
+select {
+  flex: 1 1 220px;
+  min-width: 0;
+  width: 100%;
+  background: #0f1310;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-chico);
+  color: var(--texto);
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 13px 14px;
+  cursor: pointer;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--acento-fuerte);
+  box-shadow: 0 0 0 3px rgba(245, 160, 76, 0.18);
+}
+
+select option {
+  background: #141917;
+  color: var(--texto);
+}
+
 .formulario {
   background: var(--superficie);
   border: 1px solid var(--borde);

@@ -39,8 +39,10 @@
 
       <div class="campo">
         <label for="categoria">Categoría</label>
-        <input id="categoria" name="categoria" type="text" autocomplete="off"
-               placeholder="Literatura">
+        <select id="categoria" name="categoria">
+          <option value="">Elegí una categoría…</option>
+        </select>
+        <p class="campo__ayuda">Las categorías son fijas: elegí una de la lista.</p>
       </div>
 
       <div class="campo">
@@ -79,6 +81,7 @@
   </main>
 
   <script src="assets/js/codec.js"></script>
+  <script src="assets/js/categorias.js"></script>
   <script src="assets/js/letras.js"></script>
   <script src="assets/js/crear.js"></script>
 </body>
