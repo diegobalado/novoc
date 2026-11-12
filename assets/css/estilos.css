@@ -40,6 +40,7 @@
   --radio-chico: 10px;
   --ancho: 720px;
   --fuente: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fuente-letra: var(--fuente);
   --fuente-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
@@ -184,33 +185,33 @@ body {
 
 .consonantes {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 0.1em;
   justify-content: center;
   margin-bottom: 32px;
+  font-size: 2.4rem;
+  line-height: 1;
 }
 
 .consonantes--preview {
   justify-content: flex-start;
-  min-height: 62px;
+  font-size: 1.8rem;
 }
 
 .consonantes--preview:empty {
   display: none;
-  min-height: 0;
 }
 
 .consonante {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 52px;
-  height: 62px;
-  padding: 0 10px;
-  border-radius: var(--radio-chico);
+  min-width: 0.85em;
+  height: 1.08em;
+  padding: 0 0.12em;
+  border-radius: 0.12em;
   background: var(--superficie-alta);
-  font-family: var(--fuente-mono);
-  font-size: 1.6rem;
+  font-family: var(--fuente-letra);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--texto);
@@ -364,10 +365,5 @@ input[readonly] { color: var(--acento); }
 @media (max-width: 520px) {
   .panel { padding: 22px 18px; }
   .formulario { padding: 18px; }
-  .consonante {
-    min-width: 42px;
-    height: 52px;
-    font-size: 1.3rem;
-  }
   .intento__fila .boton { width: 100%; }
 }

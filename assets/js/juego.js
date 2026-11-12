@@ -44,6 +44,13 @@
     }
   }
 
+  // La palabra va en una sola línea y la letra se agranda hasta llenar el
+  // ancho disponible. Hay que ajustar después de mostrar la pantalla: si el
+  // panel está oculto, clientWidth da 0 y no hay nada que medir.
+  function ajustarTamano() {
+    window.NovocLetras.ajustar(el.consonantes);
+  }
+
   function mostrarError(mensaje) {
     ocultar(el.carga);
     ocultar(el.juego);
@@ -150,10 +157,12 @@
       firmaObjetivo = C.firma(p.w);
 
       el.categoria.textContent = p.c;
-      renderConsonantes(firmaObjetivo);
 
       ocultar(el.carga);
       mostrar(el.juego);
+      renderConsonantes(firmaObjetivo);
+      ajustarTamano();
+
       el.intento.focus();
     }).catch(function (err) {
       mostrarError(err && err.message ? err.message : 'El enlace no es válido.');
