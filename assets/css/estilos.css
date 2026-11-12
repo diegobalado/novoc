@@ -66,8 +66,19 @@ body {
 
 /* ---------- layout ---------- */
 
+/* La pantalla del juego reparte el alto: la pista queda en el medio y los
+   botones abajo del todo. Solo index.html: crear.html es un formulario y se
+   lee de arriba abajo, así que su body queda como está. */
+body.pantalla-juego {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 .app {
   max-width: var(--ancho);
+  width: 100%;
   margin: 0 auto;
   padding-top: 24px;
 }

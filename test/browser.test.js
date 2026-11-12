@@ -624,6 +624,9 @@ test('la tipografía Space Grotesk carga y se aplica en file://', OMITIR, async 
       s.style.fontFamily = familia;
       s.style.fontSize = '40px';
       s.style.display = 'inline-block';
+      // El body es una columna flex: sin esto el span se estira y las dos
+      // fuentes miden lo mismo.
+      s.style.alignSelf = 'flex-start';
       s.textContent = 'Pinocho';
       document.body.appendChild(s);
       const w = s.getBoundingClientRect().width;
