@@ -109,6 +109,7 @@ novoc/
 │   ├── fonts/          ← Space Grotesk (woff2) + licencia OFL
 │   └── js/
 │       ├── codec.js    ← base64url, deflate, firma, encode/decode
+│       ├── letras.js   ← ajuste del tamaño de la pista
 │       ├── juego.js    ← render + validación del intento
 │       └── crear.js    ← form + link + copiar
 ├── test/
@@ -140,6 +141,27 @@ Todos los scripts son clásicos y se cargan en orden:
 
 `codec.js` usa un shim UMD mínimo para funcionar como script en el browser y
 como CommonJS en Node (los tests lo importan con `require`).
+
+## Cómo se muestra la pista
+
+Las consonantes van **en una sola línea** y la letra se agranda hasta ocupar
+todo el ancho disponible: una palabra de cuatro letras sale enorme y una de
+veinte sale chiquita, pero las dos llenan la pantalla.
+
+No se puede calcular con una fórmula, porque el ancho de cada letra depende de
+la fuente. Lo que hace `assets/js/letras.js` es:
+
+1. Poner la fila a un tamaño de referencia (100 px) y **medirla** de verdad.
+2. Escalar a partir de ahí, para que ocupe el ancho disponible.
+
+Para que el escalado sea exacto, todo lo que forma la fila está en `em`
+(padding, gap, `min-width` y alto de la teja): así la fila crece en bloque con
+la letra. El tamaño tiene un tope (una fracción del ancho), porque si no, una
+palabra de dos consonantes llenaría la pantalla.
+
+El ajuste se vuelve a hacer cuando cambia el tamaño de la ventana y cuando
+termina de cargar la fuente: hasta entonces las letras se miden con la
+tipografía de respaldo, que tiene otras medidas.
 
 ## Gotchas ya resueltos en el código
 
