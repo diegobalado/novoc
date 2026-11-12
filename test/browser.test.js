@@ -599,6 +599,56 @@ test('crear.html genera un enlace jugable', OMITIR, async () => {
   assert.strictEqual(abierto.consonantes, 'pnch');
 });
 
+test('en la app publicada el enlace sale con la URL pública', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  // No se puede redefinir window.location, así que se intercepta la base que
+  // calcula base.js: la app se comporta como si estuviera publicada.
+  const inyectado = await cliente.enviar('Page.addScriptToEvaluateOnNewDocument', {
+    source: `
+      Object.defineProperty(window, 'NovocBase', {
+        configurable: true,
+        get: function () {
+          return {
+            URL_PUBLICA: 'https://diegobalado.github.io/novoc/index.html',
+            esLocal: function () { return false; },
+            urlLocal: function () { return 'https://local.test/index.html'; },
+            base: function () { return 'https://diegobalado.github.io/novoc/index.html'; }
+          };
+        },
+        set: function () {}
+      });
+    `
+  });
+
+  try {
+    await cliente.navegar(urlArchivo('crear.html'));
+    const estado = await cliente.evaluar(`(async () => {
+      document.getElementById('palabra').value = 'Pinocho';
+      document.getElementById('categoria').value = 'Literatura';
+      document.getElementById('form-crear').dispatchEvent(new Event('submit', {cancelable:true}));
+      await new Promise(r => setTimeout(r, 300));
+      return {
+        enlace: document.getElementById('enlace').value,
+        avisoVisible: !document.getElementById('aviso-local').classList.contains('oculto')
+      };
+    })()`);
+
+    assert.match(
+      estado.enlace,
+      /^https:\/\/diegobalado\.github\.io\/novoc\/index\.html\?c=/,
+      'el enlace tiene que salir con la URL pública, para que se pueda compartir'
+    );
+    assert.strictEqual(estado.avisoVisible, false, 'en la app publicada no hay aviso de local');
+  } finally {
+    await cliente.enviar('Page.removeScriptToEvaluateOnNewDocument', {
+      identifier: inyectado.identifier
+    });
+  }
+});
+
 test('crear.html con palabra y categoría vacías da error claro', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
@@ -812,4 +862,5 @@ test('no hay errores en la consola', OMITIR, async () => {
   await cliente.navegar(urlArchivo('crear.html'));
   assert.deepStrictEqual(cliente.consola, []);
 });
+
 
