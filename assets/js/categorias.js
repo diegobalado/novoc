@@ -20,8 +20,7 @@
 
   const LISTA = [
     'Literatura',
-    'Cine',
-    'Series',
+    'Cine y series',
     'Música',
     'Deportes',
     'Historia',
