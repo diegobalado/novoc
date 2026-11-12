@@ -189,11 +189,13 @@ round-trip del codec, los códigos exactos del plan, acentos, ñ, payload
 corrupto, base64url inválido, marca desconocida, versión de payload desconocida
 y validaciones de palabra/categoría.
 
-**`test/browser.test.js`** (11 tests): levanta Chromium headless y maneja el
+**`test/browser.test.js`** (13 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
 intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, generación de
-enlaces, botón Copiar, botón Compartir y la carga de la tipografía en `file://`.
+enlaces, botón Copiar, botón Compartir, la carga de la tipografía en `file://`,
+que la pista vaya en una sola línea llenando el ancho y que se recalcule al
+cambiar el tamaño de la ventana.
 
 El navegador se busca solo (`/usr/bin/chromium`, `google-chrome`, la cache de
 Playwright…). Para indicar uno a mano:
