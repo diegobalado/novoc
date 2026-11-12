@@ -93,7 +93,7 @@ body {
   text-decoration: none;
 }
 
-.marca:hover { color: #9adcff; }
+.marca:hover { color: #ffc182; }
 
 .app__nav a {
   color: var(--texto-tenue);
@@ -131,8 +131,8 @@ body {
 }
 
 .panel--ok {
-  border-color: rgba(86, 211, 100, 0.4);
-  background: rgba(86, 211, 100, 0.05);
+  border-color: rgba(87, 209, 122, 0.4);
+  background: rgba(87, 209, 122, 0.05);
   text-align: left;
   margin-top: 28px;
 }
@@ -156,7 +156,6 @@ body {
   font-size: 0.9rem;
   margin: 0 0 24px;
 }
-
 .aviso code {
   font-family: var(--fuente-mono);
   font-size: 0.85em;
@@ -218,7 +217,7 @@ body {
 }
 
 body.resuelto .consonante {
-  background: rgba(86, 211, 100, 0.1);
+  background: rgba(87, 209, 122, 0.12);
   color: var(--ok);
 }
 
@@ -247,7 +246,7 @@ input[type="text"] {
   flex: 1 1 220px;
   min-width: 0;
   width: 100%;
-  background: #0e131b;
+  background: #0f1310;
   border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-chico);
   color: var(--texto);
@@ -260,10 +259,10 @@ input[type="text"] {
 input[type="text"]:focus {
   outline: none;
   border-color: var(--acento-fuerte);
-  box-shadow: 0 0 0 3px rgba(90, 200, 250, 0.16);
+  box-shadow: 0 0 0 3px rgba(245, 160, 76, 0.18);
 }
 
-input[type="text"]::placeholder { color: #5d6b80; }
+input[type="text"]::placeholder { color: #5f6d61; }
 
 input[readonly] { color: var(--acento); }
 
@@ -322,10 +321,10 @@ input[readonly] { color: var(--acento); }
 .boton--primario {
   background: var(--acento-fuerte);
   border-color: var(--acento-fuerte);
-  color: #04121b;
+  color: #1b0d02;
 }
 
-.boton--primario:hover { background: #46b3e3; }
+.boton--primario:hover { background: #f0923a; }
 
 .boton--fantasma {
   background: transparent;
