@@ -210,12 +210,38 @@ El ajuste se vuelve a hacer cuando cambia el tamaño de la ventana y cuando
 termina de cargar la fuente: hasta entonces las letras se miden con la
 tipografía de respaldo, que tiene otras medidas.
 
+## El reparto vertical
+
+La pantalla del juego (`index.html`) reparte el alto de la pantalla:
+
+- El `body` es una **columna flex** de alto completo (`100dvh`, con `100vh`
+  como respaldo). Solo el juego: `crear.html` es un formulario y se lee de
+  arriba abajo, así que su `body` queda como estaba.
+- La **pista** (categoría + consonantes) va en un bloque con `margin: auto 0`,
+  que se queda cerca del medio de la pantalla.
+- Los **botones** ("Revelar respuesta", "Compartir") van abajo del todo, con
+  `margin-top: auto`. El hueco mínimo de 22 px con el resto de la pantalla es
+  `padding-top`, porque un margen auto lo taparía cuando hay espacio de sobra.
+- La **pantalla de inicio** se reparte igual: título arriba, ejemplos en el
+  medio y el botón de crear abajo.
+
+Si el contenido no entra (una pantalla muy baja), la página **scrollea**: el
+`flex-shrink: 0` evita que la pantalla se comprima y que algo se recorte o se
+superponga.
+
+El padding de abajo del `body` es `max(24px, env(safe-area-inset-bottom))`:
+deja aire para la barra del navegador y el notch sin alejar los botones del
+borde.
+
 ## Gotchas ya resueltos en el código
 
 - **`navigator.clipboard` no es confiable en `file://`**: hay un fallback con
   `document.execCommand('copy')` sobre un `<textarea>` temporal.
 - **`location.origin` es `"null"` o `"file://"` en `file://`**: la URL base se
   arma con `location.href`, nunca con `origin`.
+- **Con el `body` como columna flex, un `<span>` que se agrega para medir
+  texto se estira**: hay que ponerlo `align-self: flex-start`, si no mide el
+  ancho del contenedor y no el del texto.
 - **XSS**: lo que viene del `?c=` es texto controlado por el usuario y se
   renderiza **siempre con `textContent`**, nunca con `innerHTML`.
 - **`navigator.share` no existe en desktop**: el fallback termina siendo el
@@ -247,15 +273,16 @@ tengan los datos completos, que su categoría esté en la lista fija, que
 ninguna palabra se quede sin consonantes, el round-trip de cada ejemplo
 (codificar y decodificar) y que el código de cada uno sea el documentado.
 
-**`test/browser.test.js`** (16 tests): levanta Chromium headless y maneja el
+**`test/browser.test.js`** (18 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
 intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, los tres ejemplos de
 la pantalla de inicio (y que un ejemplo abra el puzzle correcto), generación
 de enlaces, botón Copiar, botón Compartir, la carga de la tipografía en
 `file://`, que la pista vaya en una sola línea llenando el ancho, que se
-recalcule al cambiar el tamaño de la ventana y que la categoría se elija de la
-lista fija.
+recalcule al cambiar el tamaño de la ventana, que la categoría se elija de la
+lista fija y el reparto vertical (en un celular de 390×844 y en una pantalla
+corta de 390×380, donde la página tiene que scrollear).
 
 El navegador se busca solo (`/usr/bin/chromium`, `google-chrome`, la cache de
 Playwright…). Para indicar uno a mano:
