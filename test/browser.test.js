@@ -425,6 +425,57 @@ test('la pantalla de inicio explica el juego sin jerga técnica', OMITIR, async 
   );
 });
 
+test('la pantalla de inicio muestra el nombre del juego en mayúsculas y con color', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html'));
+  const estilo = await cliente.evaluar(`(() => {
+    const h1 = document.querySelector('#estado-vacio h1');
+    const cs = getComputedStyle(h1);
+    const marca = getComputedStyle(document.querySelector('.app__header .marca'));
+    const nodo = h1.firstChild;
+
+    // Los caracteres, uno por uno: el rect de cada uno incluye el
+    // letter-spacing que va después.
+    const rango = document.createRange();
+    let izq = Infinity, der = -Infinity;
+    for (let i = 0; i < nodo.length; i++) {
+      rango.setStart(nodo, i);
+      rango.setEnd(nodo, i + 1);
+      const r = rango.getBoundingClientRect();
+      if (r.width) { izq = Math.min(izq, r.left); der = Math.max(der, r.right); }
+    }
+
+    const caja = h1.getBoundingClientRect();
+    const espaciado = parseFloat(cs.letterSpacing) || 0;
+    // El hueco después de la última letra no es parte del texto visible.
+    const derVisible = der - espaciado;
+
+    return {
+      texto: nodo.textContent,
+      transform: cs.textTransform,
+      color: cs.color,
+      tamano: parseFloat(cs.fontSize),
+      marcaTransform: marca.textTransform,
+      marcaColor: marca.color,
+      desvio: Math.abs((izq + derVisible) / 2 - (caja.left + caja.right) / 2)
+    };
+  })()`);
+
+  assert.strictEqual(estilo.texto, 'Novoc');
+  assert.strictEqual(estilo.transform, 'uppercase', 'el nombre va en mayúsculas');
+  assert.strictEqual(estilo.color, 'rgb(245, 160, 76)', 'el nombre va en el color de acento');
+  assert.ok(estilo.tamano > 24, 'el nombre tiene que ser más grande que un título de panel');
+  assert.ok(
+    estilo.desvio < 1.5,
+    'el nombre tiene que quedar ópticamente centrado, sin la corrida del letter-spacing'
+  );
+  assert.strictEqual(estilo.marcaTransform, 'uppercase', 'la marca del header sigue en mayúsculas');
+  assert.strictEqual(estilo.marcaColor, 'rgb(245, 160, 76)', 'la marca del header sigue en acento');
+});
+
 test('la pantalla de inicio ofrece tres ejemplos jugables', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
@@ -757,3 +808,4 @@ test('no hay errores en la consola', OMITIR, async () => {
   await cliente.navegar(urlArchivo('crear.html'));
   assert.deepStrictEqual(cliente.consola, []);
 });
+

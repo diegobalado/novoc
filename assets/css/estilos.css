@@ -122,12 +122,18 @@ body.pantalla-juego #estado-vacio {
   border-bottom: 1px solid var(--borde);
 }
 
-.marca {
+/* El nombre del juego y la marca del header comparten criterio: mayúsculas,
+   color de acento y letter-spacing. */
+.marca,
+.titulo-juego {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-size: 0.82rem;
   color: var(--acento);
+}
+
+.marca {
+  font-size: 0.82rem;
   text-decoration: none;
 }
 
@@ -178,6 +184,17 @@ body.pantalla-juego #estado-vacio {
 .panel__titulo {
   margin: 0 0 10px;
   font-size: 1.25rem;
+}
+
+/* El nombre del juego, arriba de la pantalla de inicio: la marca del header,
+   pero más grande. */
+.titulo-juego {
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  margin: 0 0 12px;
+  /* El letter-spacing también suma un espacio después de la última letra: con
+     el texto centrado hay que compensarlo con un text-indent, así el nombre
+     queda ópticamente centrado. */
+  text-indent: 0.14em;
 }
 
 .panel__texto {
