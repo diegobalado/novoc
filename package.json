@@ -8,6 +8,7 @@
     "test:codec": "node --test test/codec.test.js",
     "test:categorias": "node --test test/categorias.test.js",
     "test:ejemplos": "node --test test/ejemplos.test.js",
+    "test:base": "node --test test/base.test.js",
     "test:browser": "node --test test/browser.test.js",
     "start": "python3 -m http.server 8000"
   },

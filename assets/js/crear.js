@@ -23,14 +23,15 @@
 
   /**
    * La base de los enlaces: la dirección de index.html. No se configura, la
-   * app sabe dónde vive. Es la de esta misma página, sin query, apuntando al
-   * index.html (el juego) que vive al lado. No se usa location.origin porque
-   * en file:// es "null" o "file://".
+   * app sabe dónde vive. Es la app publicada, salvo que se esté corriendo en
+   * local (file:// o localhost), donde es la local.
    */
   function urlBase() {
-    var href = window.location.href.split('?')[0].split('#')[0];
-    if (/\.html?$/i.test(href)) return href.replace(/[^/]*$/, 'index.html');
-    return href.replace(/\/+$/, '') + '/index.html';
+    return window.NovocBase.base({
+      protocol: window.location.protocol,
+      hostname: window.location.hostname,
+      href: window.location.href
+    });
   }
 
   // El <select> de categorías se puebla desde la lista fija, para que el
