@@ -237,6 +237,72 @@ test('el juego muestra la categoría y las consonantes', OMITIR, async () => {
   assert.strictEqual(estado.consonantes, 'pnch');
 });
 
+test('la pista va en una sola línea y llena el ancho disponible', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const estado = await cliente.evaluar(`(() => {
+    const c = document.getElementById('consonantes');
+    const letras = [...c.children];
+    const caja = c.getBoundingClientRect();
+    const primera = letras[0].getBoundingClientRect();
+    const ultima = letras[letras.length - 1].getBoundingClientRect();
+    return {
+      filas: new Set(letras.map(n => Math.round(n.getBoundingClientRect().top))).size,
+      anchoFila: Math.round(ultima.right - primera.left),
+      anchoCaja: Math.round(caja.width),
+      desborde: c.scrollWidth > c.clientWidth + 1
+    };
+  })()`);
+
+  assert.strictEqual(estado.filas, 1, 'todas las letras tienen que estar en la misma línea');
+  assert.ok(
+    Math.abs(estado.anchoFila - estado.anchoCaja) < 12,
+    'la fila tiene que llenar el ancho disponible'
+  );
+  assert.strictEqual(estado.desborde, false, 'la fila no se puede salir del contenedor');
+});
+
+test('la pista se recalcula al cambiar el tamaño de la ventana', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const medir = () => cliente.evaluar(`(() => {
+    const c = document.getElementById('consonantes');
+    const letras = [...c.children];
+    const primera = letras[0].getBoundingClientRect();
+    const ultima = letras[letras.length - 1].getBoundingClientRect();
+    return {
+      tamano: parseFloat(getComputedStyle(c).fontSize),
+      anchoFila: Math.round(ultima.right - primera.left),
+      anchoCaja: Math.round(c.getBoundingClientRect().width)
+    };
+  })()`);
+
+  const ancho = await medir();
+
+  await cliente.enviar('Emulation.setDeviceMetricsOverride', {
+    width: 400, height: 700, deviceScaleFactor: 1, mobile: false
+  });
+  await new Promise((r) => setTimeout(r, 400));
+  const angosto = await medir();
+
+  assert.ok(
+    angosto.tamano < ancho.tamano,
+    'con menos ancho la letra tiene que ser más chica'
+  );
+  assert.ok(
+    Math.abs(angosto.anchoFila - angosto.anchoCaja) < 12,
+    'la fila tiene que seguir llenando el ancho disponible'
+  );
+});
+
 test('el intento se valida: acierto y fallo', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;

@@ -178,5 +178,20 @@
   });
   el.btnCompartir.addEventListener('click', compartir);
 
+  // El tamaño de la letra depende del ancho disponible: hay que recalcularlo
+  // cuando cambia la ventana.
+  window.addEventListener('resize', ajustarTamano);
+
+  // Y también cuando termina de cargar la fuente: hasta entonces las letras
+  // se miden con la tipografía de respaldo, que tiene otras medidas.
+  if (window.document.fonts) {
+    if (window.document.fonts.addEventListener) {
+      window.document.fonts.addEventListener('loadingdone', ajustarTamano);
+    }
+    if (window.document.fonts.ready) {
+      window.document.fonts.ready.then(ajustarTamano);
+    }
+  }
+
   arrancar();
 })();
