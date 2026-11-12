@@ -83,6 +83,21 @@ body.pantalla-juego {
   padding-top: 24px;
 }
 
+/* El .app y la pantalla de juego se estiran para ocupar el alto disponible.
+   flex-shrink: 0 para que el contenido nunca se comprima: si no entra, la
+   página scrollea. */
+body.pantalla-juego .app {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+body.pantalla-juego #estado-juego {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
 .app--ancho { max-width: 780px; }
 
 .app__header {
