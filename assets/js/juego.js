@@ -84,7 +84,7 @@
 
   function compartir() {
     var datos = {
-      title: 'Juego de las consonantes',
+      title: 'Novoc',
       text: 'Adiviná la palabra: ' + (puzzle ? puzzle.c : ''),
       url: window.location.href
     };

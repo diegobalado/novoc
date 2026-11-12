@@ -1,7 +1,8 @@
-# Juego de las consonantes
+# Novoc
 
-App web estática para un juego de adivinación: se muestra la **categoría** y la
-**palabra sin vocales ni espacios**, y el jugador intenta adivinarla.
+App web estática para un juego de adivinación por consonantes: se muestra la
+**categoría** y la **palabra sin vocales ni espacios**, y el jugador intenta
+adivinarla.
 
 Sin backend, sin base de datos, sin build. La palabra viaja **codificada dentro
 del parámetro `?c=` de la URL**, así que un enlace es todo el puzzle.
