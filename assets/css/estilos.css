@@ -192,6 +192,12 @@ body.pantalla-juego #estado-juego {
 
 /* ---------- juego ---------- */
 
+/* El bloque de la pista (categoría + consonantes) se queda cerca del medio
+   de la pantalla: los márgenes auto se comen el espacio que sobra. */
+.pista {
+  margin: auto 0;
+}
+
 .etiqueta {
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -450,7 +456,14 @@ select option {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 22px;
+  /* El hueco mínimo entre el contenido y los botones: con padding, porque el
+     margin-top auto lo taparía cuando hay espacio de sobra. */
+  padding-top: 22px;
+}
+
+/* En la pantalla de juego los botones se van abajo del todo. */
+body.pantalla-juego .acciones {
+  margin-top: auto;
 }
 
 .acciones .boton { flex: 0 0 auto; }
