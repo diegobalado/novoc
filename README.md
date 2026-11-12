@@ -32,8 +32,14 @@ python3 -m http.server 8000
 
 ### La pantalla de inicio
 
-Sin `?c=` en la URL, el juego muestra la pantalla de inicio: el título, tres
-**ejemplos jugables** y el botón para crear un puzzle.
+Sin `?c=` en la URL, el juego muestra la pantalla de inicio: el nombre del
+juego en mayúsculas, una línea que explica de qué se trata (sin jerga
+técnica), tres **ejemplos jugables** y el botón para crear un puzzle.
+
+El nombre usa el mismo criterio que la marca del header (mayúsculas, color de
+acento y `letter-spacing`), pero más grande. Como el `letter-spacing` también
+suma un espacio después de la última letra, el título lleva un `text-indent`
+igual: así el nombre queda ópticamente centrado.
 
 Cada ejemplo es una tarjeta con la **categoría** y la **pista** (las
 consonantes), igual que la pantalla de juego: se ve cómo se juega y el
@@ -273,11 +279,13 @@ tengan los datos completos, que su categoría esté en la lista fija, que
 ninguna palabra se quede sin consonantes, el round-trip de cada ejemplo
 (codificar y decodificar) y que el código de cada uno sea el documentado.
 
-**`test/browser.test.js`** (18 tests): levanta Chromium headless y maneja el
+**`test/browser.test.js`** (20 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
-intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, los tres ejemplos de
-la pantalla de inicio (y que un ejemplo abra el puzzle correcto), generación
+intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, la pantalla de
+inicio (que explique el juego sin jerga técnica y muestre el nombre del juego
+en mayúsculas, con color y centrado), los tres ejemplos de la pantalla de
+inicio (y que un ejemplo abra el puzzle correcto), generación
 de enlaces, botón Copiar, botón Compartir, la carga de la tipografía en
 `file://`, que la pista vaya en una sola línea llenando el ancho, que se
 recalcule al cambiar el tamaño de la ventana, que la categoría se elija de la
