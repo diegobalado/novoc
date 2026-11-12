@@ -57,6 +57,9 @@
     if (!el.juego.classList.contains('oculto')) {
       window.NovocLetras.ajustar(el.consonantes);
     }
+    if (pistasEjemplos.length) {
+      window.NovocLetras.ajustarIguales(pistasEjemplos, TOPE_EJEMPLOS);
+    }
   }
 
   // Los ejemplos de la pantalla de inicio: cada tarjeta es un link a un
@@ -104,6 +107,8 @@
       el.ejemplos.appendChild(tarjeta.link);
       pistasEjemplos.push(tarjeta.pista);
     }
+
+    ajustarTamano();
   }
 
   function mostrarError(mensaje) {

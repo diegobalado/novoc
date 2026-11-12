@@ -221,6 +221,48 @@ body.resuelto .consonante {
   color: var(--ok);
 }
 
+/* ---------- ejemplos de la pantalla de inicio ---------- */
+
+.ejemplos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+.ejemplo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-chico);
+  background: var(--superficie-alta);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color .15s ease, background .15s ease, transform .08s ease;
+}
+
+.ejemplo:hover {
+  border-color: var(--acento-fuerte);
+  background: #212a24;
+  transform: translateY(-1px);
+}
+
+.ejemplo__categoria {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  color: var(--acento);
+}
+
+.ejemplo__pista {
+  margin-bottom: 0;
+  font-size: 1.6rem;
+}
+
 /* ---------- formularios ---------- */
 
 .intento { margin: 0; }

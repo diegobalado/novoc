@@ -29,17 +29,15 @@
     return ultimo.right - primero.left;
   }
 
-  function ajustar(contenedor, maximo) {
-    if (!contenedor) return;
-    if (!contenedor.children.length) return;
-
+  // Tamaño de letra que haría falta para que la fila llene el ancho
+  // disponible. Deja el contenedor con el tamaño de referencia.
+  function tamanoDeLaFila(contenedor, maximo) {
     var disponible = contenedor.clientWidth;
-    if (!disponible) return;
+    if (!disponible) return null;
 
-    // Se mide a un tamaño de referencia y se escala.
     contenedor.style.fontSize = TAMANO_MEDIDA + 'px';
     var medido = anchoDeLaFila(contenedor);
-    if (!medido) return;
+    if (!medido) return null;
 
     var tamano = TAMANO_MEDIDA * ((disponible - 2) / medido);
 
@@ -49,8 +47,46 @@
     if (tamano > tope) tamano = tope;
     if (tamano < TAMANO_MIN) tamano = TAMANO_MIN;
 
+    return tamano;
+  }
+
+  function ajustar(contenedor, maximo) {
+    if (!contenedor) return;
+    if (!contenedor.children.length) return;
+
+    var tamano = tamanoDeLaFila(contenedor, maximo);
+    if (tamano === null) return;
+
     contenedor.style.fontSize = tamano.toFixed(2) + 'px';
   }
 
-  window.NovocLetras = { ajustar: ajustar };
+  // Varias filas que tienen que verse igual (las tarjetas de ejemplo): se
+  // calcula el tamaño de cada una y se aplica el más chico, que es el de la
+  // fila más larga. Así ninguna tarjeta tiene letras más grandes que las
+  // demás.
+  function ajustarIguales(contenedores, maximo) {
+    if (!contenedores || !contenedores.length) return;
+
+    var filas = [];
+    var comun = null;
+
+    for (var i = 0; i < contenedores.length; i++) {
+      var contenedor = contenedores[i];
+      if (!contenedor || !contenedor.children.length) continue;
+
+      var tamano = tamanoDeLaFila(contenedor, maximo);
+      if (tamano === null) continue;
+
+      filas.push({ contenedor: contenedor, tamano: tamano });
+      if (comun === null || tamano < comun) comun = tamano;
+    }
+
+    if (comun === null) return;
+
+    for (var j = 0; j < filas.length; j++) {
+      filas[j].contenedor.style.fontSize = comun.toFixed(2) + 'px';
+    }
+  }
+
+  window.NovocLetras = { ajustar: ajustar, ajustarIguales: ajustarIguales };
 })();
