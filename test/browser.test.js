@@ -647,6 +647,88 @@ test('la tipografía Space Grotesk carga y se aplica en file://', OMITIR, async 
   );
 });
 
+test('en un celular la pista queda en el medio y los botones abajo', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.enviar('Emulation.setDeviceMetricsOverride', {
+    width: 390, height: 844, deviceScaleFactor: 1, mobile: true
+  });
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const estado = await cliente.evaluar(`(() => {
+    const pista = document.getElementById('consonantes').getBoundingClientRect();
+    const acciones = document.querySelector('#estado-juego .acciones').getBoundingClientRect();
+    const doc = document.documentElement;
+    return {
+      alto: window.innerHeight,
+      centroPista: pista.top + pista.height / 2,
+      bottomAcciones: acciones.bottom,
+      scrollHeight: doc.scrollHeight
+    };
+  })()`);
+
+  assert.ok(
+    estado.centroPista > estado.alto * 0.25,
+    'la pista no puede quedar pegada al techo'
+  );
+  assert.ok(
+    estado.centroPista < estado.alto * 0.6,
+    'la pista tiene que quedar cerca del medio de la pantalla'
+  );
+  assert.ok(
+    estado.bottomAcciones > estado.alto * 0.85,
+    'los botones tienen que quedar abajo del todo'
+  );
+  assert.ok(
+    estado.alto - estado.bottomAcciones < 80,
+    'los botones no pueden quedar tan lejos del borde de abajo'
+  );
+  assert.ok(
+    estado.scrollHeight <= estado.alto + 1,
+    'en un celular normal la página no debería scrollear'
+  );
+});
+
+test('en una pantalla corta la página scrollea y los botones se llegan', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.enviar('Emulation.setDeviceMetricsOverride', {
+    width: 390, height: 380, deviceScaleFactor: 1, mobile: true
+  });
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const estado = await cliente.evaluar(`(() => {
+    const doc = document.documentElement;
+    return {
+      alto: window.innerHeight,
+      scrollHeight: doc.scrollHeight,
+      scrollea: doc.scrollHeight > window.innerHeight,
+      accionesVisible: !document.querySelector('#estado-juego .acciones').classList.contains('oculto')
+    };
+  })()`);
+
+  assert.strictEqual(estado.accionesVisible, true, 'los botones tienen que estar en la pantalla');
+  assert.ok(estado.scrollea, 'con poca altura la página tiene que scrollear');
+
+  // Al scrollear del todo, los botones quedan a la vista: no se recortan ni
+  // se superponen con nada.
+  const final = await cliente.evaluar(`(() => {
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    const b = document.querySelector('#estado-juego .acciones').getBoundingClientRect();
+    return { top: b.top, bottom: b.bottom, alto: window.innerHeight };
+  })()`);
+
+  assert.ok(final.top >= -1, 'los botones no pueden quedar cortados arriba');
+  assert.ok(
+    final.bottom <= final.alto + 1,
+    'al scrollear del todo los botones tienen que quedar dentro de la pantalla'
+  );
+});
+
 test('no hay errores en la consola', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
