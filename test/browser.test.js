@@ -406,6 +406,25 @@ test('sin ?c= la pantalla deriva a crear.html', OMITIR, async () => {
   assert.strictEqual(estado.href, 'crear.html');
 });
 
+test('la pantalla de inicio explica el juego sin jerga técnica', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html'));
+  const texto = await cliente.evaluar(
+    `document.querySelector('#estado-vacio .panel__texto').textContent.replace(/\\s+/g, ' ').trim()`
+  );
+
+  assert.match(texto, /consonantes/i, 'tiene que decir de qué se trata el juego');
+  assert.match(texto, /ejemplo/i, 'tiene que invitar a probar un ejemplo');
+  assert.doesNotMatch(
+    texto,
+    /servidor|URL|base de datos/i,
+    'no tiene que meter jerga técnica: la palabra no vive en ningún servidor'
+  );
+});
+
 test('la pantalla de inicio ofrece tres ejemplos jugables', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
