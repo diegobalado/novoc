@@ -23,17 +23,17 @@
 }
 
 :root {
-  --bg: #0b0e13;
-  --bg-degradado: radial-gradient(1200px 600px at 50% -10%, #16202e 0%, var(--bg) 60%);
-  --superficie: #141a23;
-  --superficie-alta: #1b2230;
-  --borde: #263041;
-  --borde-fuerte: #35415a;
-  --texto: #e7edf5;
-  --texto-tenue: #8d9bb0;
-  --acento: #5ac8fa;
-  --acento-fuerte: #2b9fd4;
-  --ok: #56d364;
+  --bg: #0d110f;
+  --bg-degradado: radial-gradient(1200px 600px at 50% -10%, #17251d 0%, var(--bg) 60%);
+  --superficie: #141917;
+  --superficie-alta: #1b221e;
+  --borde: #263029;
+  --borde-fuerte: #37443a;
+  --texto: #e9f0e9;
+  --texto-tenue: #93a395;
+  --acento: #f5a04c;
+  --acento-fuerte: #dd7c2e;
+  --ok: #57d17a;
   --error: #ff7b72;
   --aviso: #e3b341;
   --radio: 14px;
