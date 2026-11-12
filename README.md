@@ -25,7 +25,7 @@ python3 -m http.server 8000
 - `index.html` es el juego: lee `?c=<código>`, muestra la categoría y las
   consonantes, y valida el intento.
 - `crear.html` es el generador: se escribe palabra + categoría y devuelve un
-  enlace listo para compartir.
+  enlace listo para compartir. La categoría se elige de una lista fija.
 
 ## Cómo funciona
 
@@ -98,6 +98,23 @@ El parámetro `?c=` lo controla cualquiera, así que `decodePuzzle` valida:
 
 Cualquier falla lanza un error con mensaje legible, y la página lo muestra.
 
+### Las categorías
+
+Las categorías son **fijas**: en el generador se eligen de un dropdown, no se
+escriben a mano. La lista vive en `assets/js/categorias.js`:
+
+> Literatura · Cine · Series · Música · Teatro · Deportes · Historia · Ciencia ·
+> Tecnología · Videojuegos · Animales · Lugares · Objetos · Marcas · Personas ·
+> Otros
+
+El `<select>` se puebla desde esa lista, así que el HTML y la lista no pueden
+quedar desincronizados. Para agregar una categoría, se agrega en ese archivo.
+
+**El decoder no valida contra la lista.** Los enlaces que ya se compartieron
+pueden tener una categoría que hoy no existe en la lista (por ejemplo
+`Musica`, sin acento, o `Futbol`), y tienen que seguir abriendo. La
+validación solo es del lado del generador.
+
 ## Estructura
 
 ```
@@ -108,13 +125,15 @@ novoc/
 │   ├── css/estilos.css
 │   ├── fonts/          ← Space Grotesk (woff2) + licencia OFL
 │   └── js/
-│       ├── codec.js    ← base64url, deflate, firma, encode/decode
-│       ├── letras.js   ← ajuste del tamaño de la pista
-│       ├── juego.js    ← render + validación del intento
-│       └── crear.js    ← form + link + copiar
+│       ├── codec.js      ← base64url, deflate, firma, encode/decode
+│       ├── categorias.js ← lista fija de categorías
+│       ├── letras.js     ← ajuste del tamaño de la pista
+│       ├── juego.js      ← render + validación del intento
+│       └── crear.js      ← form + link + copiar
 ├── test/
-│   ├── codec.test.js    ← node --test (CommonJS)
-│   └── browser.test.js  ← node --test: el juego en Chromium headless (CDP)
+│   ├── codec.test.js      ← node --test (CommonJS)
+│   ├── categorias.test.js ← node --test (CommonJS)
+│   └── browser.test.js    ← node --test: el juego en Chromium headless (CDP)
 ├── package.json
 └── README.md
 ```
@@ -189,13 +208,17 @@ round-trip del codec, los códigos exactos del plan, acentos, ñ, payload
 corrupto, base64url inválido, marca desconocida, versión de payload desconocida
 y validaciones de palabra/categoría.
 
-**`test/browser.test.js`** (13 tests): levanta Chromium headless y maneja el
+**`test/categorias.test.js`** (6 tests, sin dependencias): que la lista fija no
+esté vacía, no tenga repetidas ni categorías con espacios al borde, y que
+`esValida` acepte solo lo que está en la lista.
+
+**`test/browser.test.js`** (14 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
 intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, generación de
 enlaces, botón Copiar, botón Compartir, la carga de la tipografía en `file://`,
-que la pista vaya en una sola línea llenando el ancho y que se recalcule al
-cambiar el tamaño de la ventana.
+que la pista vaya en una sola línea llenando el ancho, que se recalcule al
+cambiar el tamaño de la ventana y que la categoría se elija de la lista fija.
 
 El navegador se busca solo (`/usr/bin/chromium`, `google-chrome`, la cache de
 Playwright…). Para indicar uno a mano:
