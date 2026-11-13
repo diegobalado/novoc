@@ -26,7 +26,8 @@ python3 -m http.server 8000
   consonantes, y valida el intento. Sin `?c=` es la pantalla de inicio, que
   ofrece tres ejemplos jugables.
 - `crear.html` es el generador: se escribe palabra + categoría y devuelve un
-  enlace listo para compartir. La categoría se elige de una lista fija.
+  enlace listo para compartir (y otro de **solo lectura**, para pasar la pista
+  sin que nadie pueda adivinar). La categoría se elige de una lista fija.
 
 ## Cómo funciona
 
@@ -61,6 +62,25 @@ después del primer paint.
 La pista de las tres tarjetas usa **el mismo tamaño de letra**: se mide cada
 fila y se aplica el tamaño de la más larga, así ninguna tarjeta tiene letras
 grandes que las otras.
+
+### El modo "solo lectura"
+
+Un link puede pedir que el puzzle se muestre **sin que nadie pueda adivinar**:
+se ve la categoría y las consonantes, pero no hay donde escribir, ni botones de
+adivinar, de revelar ni de compartir.
+
+El modo viaja en la URL, al lado del código:
+
+```
+index.html?c=<código>&modo=lectura
+```
+
+Es un parámetro más, no parte del código: el puzzle es el mismo y el link se
+puede compartir. `crear.html` da los dos links (el de jugar y el de solo
+lectura), cada uno con su botón de copiar.
+
+Sirve para pasar la pista sin que se la jueguen: un acertijo en un chat, una
+pista para un grupo, un jueguetón en una presentación.
 
 ### La firma consonantal
 
@@ -322,7 +342,7 @@ ninguna palabra se quede sin consonantes, el round-trip de cada ejemplo
 (la app publicada salvo que se esté en local), que la base siempre sea
 absoluta y que la URL local cambie el archivo por `index.html`.
 
-**`test/browser.test.js`** (21 tests): levanta Chromium headless y maneja el
+**`test/browser.test.js`** (26 tests): levanta Chromium headless y maneja el
 navegador con un cliente CDP mínimo, sin dependencias. Cubre el checklist
 manual del plan: la pantalla de juego, acierto y fallo, normalización del
 intento, `?c=` corrupto, HTML inyectado, estado sin `?c=`, la pantalla de
@@ -330,11 +350,12 @@ inicio (que explique el juego sin jerga técnica y muestre el nombre del juego
 en mayúsculas, con color y centrado), los tres ejemplos de la pantalla de
 inicio (y que un ejemplo abra el puzzle correcto), generación
 de enlaces (que en local apunten a la copia local y en la app publicada a la
-URL pública), botón Copiar, botón Compartir, la carga de la tipografía en
-`file://`, que la pista vaya en una sola línea llenando el ancho, que se
-recalcule al cambiar el tamaño de la ventana, que la categoría se elija de la
-lista fija y el reparto vertical (en un celular de 390×844 y en una pantalla
-corta de 390×380, donde la página tiene que scrollear).
+URL pública), el enlace de solo lectura, botón Copiar, botón Compartir, la
+carga de la tipografía en `file://`, que la pista vaya en una sola línea
+llenando el ancho, que se recalcule al cambiar el tamaño de la ventana, que la
+categoría se elija de la lista fija y el reparto vertical (en un celular de
+390×844 y en una pantalla corta de 390×380, donde la página tiene que
+scrollear).
 
 El navegador se busca solo (`/usr/bin/chromium`, `google-chrome`, la cache de
 Playwright…). Para indicar uno a mano:
