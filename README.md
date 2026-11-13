@@ -170,7 +170,7 @@ novoc/
 ├── crear.html          ← generador de enlaces
 ├── assets/
 │   ├── css/estilos.css
-│   ├── fonts/          ← Space Grotesk (woff2) + licencia OFL
+│   ├── fonts/          ← Space Grotesk + las candidatas de la pista (woff2)
 │   └── js/
 │       ├── codec.js      ← base64url, deflate, firma, encode/decode
 │       ├── categorias.js ← lista fija de categorías
@@ -196,7 +196,25 @@ en total). Va con `@font-face` y no con un CDN: sigue funcionando sin internet
 y abriendo el archivo con doble click.
 
 Space Grotesk es de [Florian Karsten](https://github.com/floriankarsten/space-grotesk),
-bajo SIL Open Font License 1.1 (la licencia está en `assets/fonts/OFL.txt`).
+bajo SIL Open Font License 1.1 (la licencia está en
+`assets/fonts/OFL-space-grotesk.txt`).
+
+### Las candidatas para la pista
+
+Las letras grandes de la pista usan su propia variable, `--fuente-letra`. Hoy
+apunta a la general (`var(--fuente)`, o sea Space Grotesk), pero en el repo
+están también **Fredoka**, **Rubik** y **Outfit**, auto-hospedadas y con su
+`@font-face`, por si se quieren probar para la pista.
+
+Cambiarla es **una línea** en `assets/css/estilos.css`:
+
+```css
+--fuente-letra: 'Fredoka', var(--fuente);
+```
+
+Las cuatro son SIL Open Font License 1.1, con la licencia de cada una en
+`assets/fonts/OFL-*.txt`. Mientras no se usen, el navegador no las baja: solo
+descarga la fuente que se le pide.
 
 ## Scripts clásicos, no módulos
 

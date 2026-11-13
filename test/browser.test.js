@@ -771,6 +771,53 @@ test('la tipografía Space Grotesk carga y se aplica en file://', OMITIR, async 
   );
 });
 
+test('las tipografías candidatas de la pista cargan en file://', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const estado = await cliente.evaluar(`(async () => {
+    await document.fonts.ready;
+    const medir = (familia) => {
+      const s = document.createElement('span');
+      s.style.fontFamily = familia;
+      s.style.fontSize = '40px';
+      s.style.display = 'inline-block';
+      // El body es una columna flex: sin esto el span se estira y las dos
+      // fuentes miden lo mismo.
+      s.style.alignSelf = 'flex-start';
+      s.textContent = 'Pinocho';
+      document.body.appendChild(s);
+      const w = s.getBoundingClientRect().width;
+      s.remove();
+      return w;
+    };
+
+    // Las candidatas no las usa ninguna pantalla todavía: hay que pedirla
+    // explícitamente, si no el navegador ni las baja.
+    const resultado = {};
+    for (const nombre of ['Fredoka', 'Rubik', 'Outfit']) {
+      await document.fonts.load('700 40px "' + nombre + '"');
+      resultado[nombre] = {
+        cargada: document.fonts.check('700 16px "' + nombre + '"'),
+        ancho: medir('"' + nombre + '"')
+      };
+    }
+    resultado.fallback = medir('monospace');
+    return resultado;
+  })()`);
+
+  for (const nombre of ['Fredoka', 'Rubik', 'Outfit']) {
+    assert.strictEqual(estado[nombre].cargada, true, nombre + ' tiene que estar cargada');
+    assert.ok(
+      Math.abs(estado[nombre].ancho - estado.fallback) > 0.5,
+      nombre + ' tiene que renderizar distinta al fallback'
+    );
+  }
+});
+
 test('en un celular la pista queda en el medio y los botones abajo', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
