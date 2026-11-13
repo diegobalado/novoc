@@ -192,24 +192,27 @@ novoc/
 ## Tipografía
 
 La app usa **Space Grotesk**, auto-hospedada en `assets/fonts/` (woff2, 41 KB
-en total). Va con `@font-face` y no con un CDN: sigue funcionando sin internet
-y abriendo el archivo con doble click.
+en total), y **Rubik** para las letras de la pista. Van con `@font-face` y no
+con un CDN: siguen funcionando sin internet y abriendo el archivo con doble
+click.
 
 Space Grotesk es de [Florian Karsten](https://github.com/floriankarsten/space-grotesk),
 bajo SIL Open Font License 1.1 (la licencia está en
 `assets/fonts/OFL-space-grotesk.txt`).
 
-### Las candidatas para la pista
+### La tipografía de la pista
 
-Las letras grandes de la pista usan su propia variable, `--fuente-letra`. Hoy
-apunta a la general (`var(--fuente)`, o sea Space Grotesk), pero en el repo
-están también **Fredoka**, **Rubik** y **Outfit**, auto-hospedadas y con su
-`@font-face`, por si se quieren probar para la pista.
+Las letras grandes de la pista usan su propia variable, `--fuente-letra`, que
+apunta a **Rubik**: se distingue de la general (Space Grotesk) y se lee bien en
+tamaño grande.
+
+En el repo están también **Fredoka** y **Outfit**, auto-hospedadas y con su
+`@font-face`, por si se quieren probar en algún momento.
 
 Cambiarla es **una línea** en `assets/css/estilos.css`:
 
 ```css
---fuente-letra: 'Fredoka', var(--fuente);
+--fuente-letra: 'Outfit', var(--fuente);
 ```
 
 Las cuatro son SIL Open Font License 1.1, con la licencia de cada una en

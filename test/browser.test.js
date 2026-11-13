@@ -818,6 +818,26 @@ test('las tipografías candidatas de la pista cargan en file://', OMITIR, async 
   }
 });
 
+test('la pista usa Rubik', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+
+  const estado = await cliente.evaluar(`(async () => {
+    await document.fonts.ready;
+    const letra = document.querySelector('#consonantes .consonante');
+    return {
+      familia: getComputedStyle(letra).fontFamily,
+      cargada: document.fonts.check('700 16px "Rubik"')
+    };
+  })()`);
+
+  assert.match(estado.familia, /Rubik/, 'las letras de la pista tienen que ir en Rubik');
+  assert.strictEqual(estado.cargada, true, 'Rubik tiene que estar cargada');
+});
+
 test('en un celular la pista queda en el medio y los botones abajo', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;
