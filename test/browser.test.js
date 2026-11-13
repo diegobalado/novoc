@@ -654,6 +654,40 @@ test('crear.html genera un enlace jugable', OMITIR, async () => {
   assert.strictEqual(abierto.consonantes, 'pnch');
 });
 
+test('crear.html da también el enlace de solo lectura', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('crear.html'));
+  const generado = await cliente.evaluar(`(async () => {
+    document.getElementById('palabra').value = 'Pinocho';
+    document.getElementById('categoria').value = 'Literatura';
+    document.getElementById('form-crear').dispatchEvent(new Event('submit', {cancelable:true}));
+    await new Promise(r => setTimeout(r, 300));
+    return {
+      enlace: document.getElementById('enlace').value,
+      enlaceLectura: document.getElementById('enlace-lectura').value
+    };
+  })()`);
+
+  assert.ok(generado.enlaceLectura, 'tiene que haber un enlace de solo lectura');
+  assert.strictEqual(
+    generado.enlaceLectura,
+    generado.enlace + '&modo=lectura',
+    'el enlace de solo lectura es el de juego con el modo al lado'
+  );
+
+  // Y tiene que abrir el puzzle en modo lectura.
+  await cliente.navegar(generado.enlaceLectura);
+  const abierto = await cliente.evaluar(`(() => ({
+    categoria: document.getElementById('categoria').textContent,
+    formVisible: !document.getElementById('form-intento').classList.contains('oculto')
+  }))()`);
+  assert.strictEqual(abierto.categoria, 'Literatura');
+  assert.strictEqual(abierto.formVisible, false, 'el enlace de solo lectura no puede dejar escribir');
+});
+
 test('en la app publicada el enlace sale con la URL pública', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;

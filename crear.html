@@ -61,14 +61,28 @@
 
     <section id="resultado-panel" class="panel panel--ok oculto">
       <h2 class="panel__titulo">Listo, tu enlace</h2>
+
       <div class="campo">
-        <label for="enlace">Enlace para compartir</label>
+        <label for="enlace">Enlace para jugar</label>
         <input id="enlace" type="text" readonly spellcheck="false">
+        <div class="acciones">
+          <button id="btn-copiar" type="button" class="boton boton--primario">Copiar</button>
+          <a id="enlace-abrir" class="boton boton--fantasma" href="#">Abrir el puzzle</a>
+        </div>
       </div>
-      <div class="acciones">
-        <button id="btn-copiar" type="button" class="boton boton--primario">Copiar</button>
-        <a id="enlace-abrir" class="boton boton--fantasma" href="#">Abrir el puzzle</a>
+
+      <div class="campo">
+        <label for="enlace-lectura">Enlace de solo lectura</label>
+        <input id="enlace-lectura" type="text" readonly spellcheck="false">
+        <p class="campo__ayuda">
+          Muestra la pista y nada más: nadie puede adivinar ni escribir. Sirve
+          para pasar la pista sin que se la jueguen.
+        </p>
+        <div class="acciones">
+          <button id="btn-copiar-lectura" type="button" class="boton">Copiar el de solo lectura</button>
+        </div>
       </div>
+
       <p id="copiado" class="resultado" role="status" aria-live="polite"></p>
     </section>
   </main>

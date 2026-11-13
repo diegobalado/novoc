@@ -13,8 +13,10 @@
     avisoLocal: document.getElementById('aviso-local'),
     resultadoPanel: document.getElementById('resultado-panel'),
     enlace: document.getElementById('enlace'),
+    enlaceLectura: document.getElementById('enlace-lectura'),
     enlaceAbrir: document.getElementById('enlace-abrir'),
     btnCopiar: document.getElementById('btn-copiar'),
+    btnCopiarLectura: document.getElementById('btn-copiar-lectura'),
     copiado: document.getElementById('copiado')
   };
 
@@ -126,8 +128,14 @@
     }
 
     C.encodePuzzle(palabra, categoria).then(function (code) {
-      var url = base + (base.indexOf('?') === -1 ? '?' : '&') + 'c=' + code;
+      var separador = base.indexOf('?') === -1 ? '?' : '&';
+      var url = base + separador + 'c=' + code;
+      // El enlace de solo lectura es el mismo, con el modo al lado: muestra
+      // la pista y nada más.
+      var urlLectura = url + '&modo=lectura';
+
       el.enlace.value = url;
+      el.enlaceLectura.value = urlLectura;
       el.enlaceAbrir.setAttribute('href', url);
       el.copiado.textContent = '';
       el.copiado.className = 'resultado';
@@ -153,18 +161,26 @@
     }
   }
 
-  el.btnCopiar.addEventListener('click', function () {
-    var texto = el.enlace.value;
+  // Copia un enlace y avisa. Hay dos: el de jugar y el de solo lectura.
+  function copiarEnlace(texto, mensaje) {
     if (!texto) return;
     copiar(texto).then(function (ok) {
       if (ok) {
         el.copiado.className = 'resultado resultado--ok';
-        el.copiado.textContent = '¡Copiado!';
+        el.copiado.textContent = mensaje;
       } else {
         el.copiado.className = 'resultado resultado--error';
         el.copiado.textContent = 'No se pudo copiar: seleccioná el enlace y copialo a mano.';
       }
     });
+  }
+
+  el.btnCopiar.addEventListener('click', function () {
+    copiarEnlace(el.enlace.value, '¡Copiado!');
+  });
+
+  el.btnCopiarLectura.addEventListener('click', function () {
+    copiarEnlace(el.enlaceLectura.value, '¡Copiado! Es el enlace de solo lectura.');
   });
 
   // En local (file:// o localhost) los enlaces que se generen no se pueden
