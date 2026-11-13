@@ -354,6 +354,61 @@ test('el intento se normaliza con la misma firma', OMITIR, async () => {
   assert.match(resultado, /Correcto/i);
 });
 
+test('el modo solo lectura muestra la pista y no deja escribir', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO + '&modo=lectura'));
+
+  const estado = await cliente.evaluar(`(async () => {
+    await new Promise(r => setTimeout(r, 100));
+    const visible = (id) => !document.getElementById(id).classList.contains('oculto');
+    return {
+      categoria: document.getElementById('categoria').textContent,
+      letras: document.getElementById('consonantes').textContent,
+      formVisible: visible('form-intento'),
+      accionesVisible: visible('acciones'),
+      avisoVisible: visible('aviso-lectura'),
+      inputPresente: !!document.getElementById('intento'),
+      // Si el input está oculto no se le puede escribir.
+      inputEscribible: document.activeElement === document.getElementById('intento')
+    };
+  })()`);
+
+  assert.strictEqual(estado.categoria, 'Literatura', 'en solo lectura se ve la categoría');
+  assert.strictEqual(estado.letras, 'pnch', 'en solo lectura se ve la pista');
+  assert.strictEqual(estado.formVisible, false, 'no puede haber un formulario para escribir');
+  assert.strictEqual(estado.accionesVisible, false, 'no puede haber botones de adivinar');
+  assert.strictEqual(estado.avisoVisible, true, 'hay que avisar que es solo lectura');
+  assert.strictEqual(estado.inputEscribible, false, 'el input no puede tener el foco');
+});
+
+test('el modo lectura no rompe el modo juego', OMITIR, async () => {
+  const nav = await navegador();
+  if (!nav) return;
+  const { cliente } = nav;
+
+  await cliente.navegar(urlArchivo('index.html', '?c=' + CODIGO_PINOCHO));
+  const estado = await cliente.evaluar(`(async () => {
+    const visible = (id) => !document.getElementById(id).classList.contains('oculto');
+    document.getElementById('intento').value = 'Pinocho';
+    document.getElementById('form-intento').dispatchEvent(new Event('submit', {cancelable:true}));
+    await new Promise(r => setTimeout(r, 50));
+    return {
+      formVisible: visible('form-intento'),
+      accionesVisible: visible('acciones'),
+      avisoVisible: visible('aviso-lectura'),
+      resultado: document.getElementById('resultado').textContent
+    };
+  })()`);
+
+  assert.strictEqual(estado.formVisible, true, 'sin el modo lectura el formulario tiene que estar');
+  assert.strictEqual(estado.accionesVisible, true, 'sin el modo lectura los botones tienen que estar');
+  assert.strictEqual(estado.avisoVisible, false, 'el aviso de solo lectura no tiene que aparecer');
+  assert.match(estado.resultado, /Correcto/i, 'el juego tiene que seguir funcionando');
+});
+
 test('un ?c= corrupto da un mensaje de error, no una pantalla rota', OMITIR, async () => {
   const nav = await navegador();
   if (!nav) return;

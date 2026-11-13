@@ -16,6 +16,8 @@
     intento: document.getElementById('intento'),
     resultado: document.getElementById('resultado'),
     respuesta: document.getElementById('respuesta'),
+    acciones: document.getElementById('acciones'),
+    avisoLectura: document.getElementById('aviso-lectura'),
     btnRevelar: document.getElementById('btn-revelar'),
     btnCompartir: document.getElementById('btn-compartir')
   };
@@ -37,6 +39,18 @@
       return new URLSearchParams(window.location.search).get('c');
     } catch (e) {
       return null;
+    }
+  }
+
+  // El modo "solo lectura" viaja en la URL, al lado del código del puzzle:
+  // index.html?c=<código>&modo=lectura. Es un parámetro más, no parte del
+  // código: el ?c= lo controla cualquiera, así que el modo tampoco puede
+  // cambiar el puzzle, solo cómo se muestra.
+  function modoLectura() {
+    try {
+      return new URLSearchParams(window.location.search).get('modo') === 'lectura';
+    } catch (e) {
+      return false;
     }
   }
 
@@ -224,7 +238,18 @@
       renderConsonantes(firmaObjetivo);
       ajustarTamano();
 
-      el.intento.focus();
+      if (modoLectura()) {
+        // En solo lectura se ve la pista y nada más: no hay donde escribir,
+        // ni botones de adivinar, de revelar ni de compartir.
+        document.body.classList.add('modo-lectura');
+        ocultar(el.form);
+        ocultar(el.resultado);
+        ocultar(el.respuesta);
+        ocultar(el.acciones);
+        mostrar(el.avisoLectura);
+      } else {
+        el.intento.focus();
+      }
     }).catch(function (err) {
       mostrarError(err && err.message ? err.message : 'El enlace no es válido.');
     });
