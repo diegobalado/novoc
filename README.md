@@ -7,8 +7,8 @@ adivinarla.
 Sin backend, sin base de datos, sin build. La palabra viaja **codificada dentro
 del parámetro `?c=` de la URL**, así que un enlace es todo el puzzle.
 
-**▶ [Jugar online](https://diegobalado.github.io/novoc/)** ·
-[Crear un puzzle](https://diegobalado.github.io/novoc/crear.html) ·
+**▶ [Jugar online](https://novoc.dev/)** ·
+[Crear un puzzle](https://novoc.dev/crear.html) ·
 [código](https://github.com/diegobalado/novoc)
 
 ## Cómo usarlo
@@ -177,8 +177,7 @@ regla, que vive en `assets/js/base.js`:
   `crear.html`. Sirve para debuggear, pero esos links no se pueden compartir
   (por eso el generador avisa).
 - En cualquier otro caso, la base es la **app publicada**
-  (`https://diegobalado.github.io/novoc/index.html`): los links salen
-  compartibles.
+  (`https://novoc.dev/index.html`): los links salen compartibles.
 
 No hay ningún campo para configurarlo: la app sabe dónde vive.
 
@@ -188,6 +187,7 @@ No hay ningún campo para configurarlo: la app sabe dónde vive.
 novoc/
 ├── index.html          ← juego, lee ?c=
 ├── crear.html          ← generador de enlaces
+├── CNAME               ← el dominio propio: novoc.dev
 ├── assets/
 │   ├── css/estilos.css
 │   ├── fonts/          ← Space Grotesk + las candidatas de la pista (woff2)
@@ -371,6 +371,11 @@ forzar el salte en CI: `NOVOC_SIN_NAVEGADOR=1 npm test`.
 
 Cualquier hosting estático sirve (GitHub Pages, Netlify, Cloudflare Pages). No
 hay build: se sube la carpeta tal cual.
+
+El sitio vive en **[novoc.dev](https://novoc.dev/)**, con GitHub Pages: el
+repo es la fuente y el `CNAME` de la raíz dice cuál es el dominio. Los
+enlaces viejos (`diegobalado.github.io/novoc/…`) **siguen abriendo**: GitHub
+los redirige al dominio nuevo.
 
 La URL de la app publicada está en un solo lugar, `URL_PUBLICA` en
 `assets/js/base.js` (y en los `og:url` del HTML). Si la app se publica en

@@ -701,10 +701,10 @@ test('en la app publicada el enlace sale con la URL pública', OMITIR, async () 
         configurable: true,
         get: function () {
           return {
-            URL_PUBLICA: 'https://diegobalado.github.io/novoc/index.html',
+            URL_PUBLICA: 'https://novoc.dev/index.html',
             esLocal: function () { return false; },
             urlLocal: function () { return 'https://local.test/index.html'; },
-            base: function () { return 'https://diegobalado.github.io/novoc/index.html'; }
+            base: function () { return 'https://novoc.dev/index.html'; }
           };
         },
         set: function () {}
@@ -727,7 +727,7 @@ test('en la app publicada el enlace sale con la URL pública', OMITIR, async () 
 
     assert.match(
       estado.enlace,
-      /^https:\/\/diegobalado\.github\.io\/novoc\/index\.html\?c=/,
+      /^https:\/\/novoc\.dev\/index\.html\?c=/,
       'el enlace tiene que salir con la URL pública, para que se pueda compartir'
     );
     assert.strictEqual(estado.avisoVisible, false, 'en la app publicada no hay aviso de local');

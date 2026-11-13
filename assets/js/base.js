@@ -17,7 +17,7 @@
 
   // La app publicada: la base de los enlaces cuando la app no se está
   // corriendo en local.
-  const URL_PUBLICA = 'https://diegobalado.github.io/novoc/index.html';
+  const URL_PUBLICA = 'https://novoc.dev/index.html';
 
   // ¿La app se está corriendo en local? (file:// o localhost)
   function esLocal(protocol, hostname) {

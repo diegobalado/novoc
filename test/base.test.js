@@ -6,17 +6,17 @@ const test = require('node:test');
 const assert = require('node:assert');
 const base = require('../assets/js/base.js');
 
-test('la app publicada es la de GitHub Pages', () => {
-  assert.strictEqual(base.URL_PUBLICA, 'https://diegobalado.github.io/novoc/index.html');
+test('la app publicada es la de novoc.dev', () => {
+  assert.strictEqual(base.URL_PUBLICA, 'https://novoc.dev/index.html');
 });
 
 test('la base es la app publicada cuando la app no está en local', () => {
   const url = base.base({
     protocol: 'https:',
-    hostname: 'diegobalado.github.io',
-    href: 'https://diegobalado.github.io/novoc/crear.html'
+    hostname: 'novoc.dev',
+    href: 'https://novoc.dev/crear.html'
   });
-  assert.strictEqual(url, 'https://diegobalado.github.io/novoc/index.html');
+  assert.strictEqual(url, 'https://novoc.dev/index.html');
 });
 
 test('en file:// la base es el index.html local', () => {
@@ -40,8 +40,8 @@ test('en localhost la base es el index.html local', () => {
 test('la base siempre es absoluta', () => {
   const publicada = base.base({
     protocol: 'https:',
-    hostname: 'diegobalado.github.io',
-    href: 'https://diegobalado.github.io/novoc/crear.html'
+    hostname: 'novoc.dev',
+    href: 'https://novoc.dev/crear.html'
   });
   assert.match(publicada, /^https:\/\//);
 
@@ -58,7 +58,7 @@ test('esLocal distingue local de publicado', () => {
   assert.strictEqual(base.esLocal('http:', 'localhost'), true);
   assert.strictEqual(base.esLocal('http:', '127.0.0.1'), true);
   assert.strictEqual(base.esLocal('http:', '[::1]'), true);
-  assert.strictEqual(base.esLocal('https:', 'diegobalado.github.io'), false);
+  assert.strictEqual(base.esLocal('https:', 'novoc.dev'), false);
   assert.strictEqual(base.esLocal('https:', 'otro-sitio.com'), false);
 });
 
